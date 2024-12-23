@@ -1,0 +1,262 @@
+/***************************************
+ * VIDEO BACKGROUND
+ ***************************************/
+.videoBackground {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.videoContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.backgroundVideo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.videoOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+/***************************************
+ * MAIN LAYOUT
+ ***************************************/
+.aboutPage {
+    position: relative;
+    width: 65%;
+    margin: 0 auto;
+    padding-top: 64px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/***************************************
+ * HERO SECTION
+ ***************************************/
+.aboutHero {
+    padding: 80px 20px;
+    background: linear-gradient(45deg, #1a365d, #2563eb);
+    color: white;
+    text-align: center;
+}
+
+.profileContainer {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.profileImage {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 24px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.profileImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.aboutHero h1 {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.title {
+    font-size: 24px;
+    opacity: 0.9;
+}
+
+/***************************************
+ * ABOUT CONTAINER
+ ***************************************/
+.aboutContainer {
+    flex: 1;
+    padding: 60px 20px;
+    background-color: #f8fafc;
+}
+
+/***************************************
+ * STORY SECTION
+ ***************************************/
+.storySection {
+    max-width: 800px;
+    margin: 0 auto 60px;
+    padding: 40px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.storySection h2 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #1a365d;
+    margin-bottom: 24px;
+}
+
+.storySection p {
+    font-size: 18px;
+    line-height: 1.8;
+    color: #4a5568;
+    margin-bottom: 24px;
+}
+
+.storySection p:last-child {
+    margin-bottom: 0;
+}
+
+/***************************************
+ * CREDENTIALS SECTION
+ ***************************************/
+.credentialsSection {
+    max-width: 1200px;
+    margin: 0 auto 60px;
+}
+
+.credentialsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.credentialCard {
+    background-color: white;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.credentialCard:hover {
+    transform: translateY(-5px);
+}
+
+.credentialIcon {
+    color: #2563eb;
+    margin-bottom: 20px;
+}
+
+.credentialCard h3 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #1a365d;
+    margin-bottom: 16px;
+}
+
+.credentialCard ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.credentialCard li {
+    color: #4a5568;
+    margin-bottom: 12px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.credentialCard li::before {
+    content: "•";
+    color: #2563eb;
+    position: absolute;
+    left: 0;
+}
+
+/***************************************
+ * CONTACT SECTION
+ ***************************************/
+.contactSection {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    background: linear-gradient(45deg, #1a365d, #2563eb);
+    border-radius: 16px;
+    text-align: center;
+    color: white;
+}
+
+.contactSection h2 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 24px;
+}
+
+.contactSection p {
+    font-size: 18px;
+    margin-bottom: 32px;
+    opacity: 0.9;
+}
+
+.ctaButton {
+    background-color: white;
+    color: #2563eb;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ctaButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/***************************************
+ * FOOTER
+ ***************************************/
+.aboutFooter {
+    background-color: #1a365d;
+    color: white;
+    padding: 24px;
+    text-align: center;
+}
+
+/***************************************
+ * RESPONSIVE DESIGN
+ ***************************************/
+@media (max-width: 768px) {
+    .aboutHero h1 {
+        font-size: 36px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+
+    .storySection {
+        padding: 24px;
+    }
+
+    .credentialsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .storySection h2,
+    .contactSection h2 {
+        font-size: 28px;
+    }
+}
