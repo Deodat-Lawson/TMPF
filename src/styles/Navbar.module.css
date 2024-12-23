@@ -1,0 +1,61 @@
+/* Reset default margins and padding */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #4da6ff; /* Match the background color of LifePlanning */
+    padding: 1rem 2rem;
+    color: white;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.navbar-logo h2 {
+    font-family: "Arial", sans-serif;
+    font-size: 1.5rem;
+    color: white;
+    margin: 0;
+}
+
+.navbar-links {
+    list-style-type: none;
+    display: flex;
+    gap: 1.5rem;
+    margin-left: auto; /* Move links to the right */
+    padding-right: 2rem; /* Add padding to the right */
+}
+
+.navbar-links li {
+    display: inline;
+}
+
+.navbar-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+    padding: 0.5rem 1rem; /* Add padding to the links */
+}
+
+.navbar-links a:hover {
+    color: #00ffff; /* Match the hover color of LifePlanning */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar-links {
+        display: none;
+    }
+}
