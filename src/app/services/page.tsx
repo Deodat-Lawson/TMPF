@@ -79,7 +79,7 @@ export default function Services() {
   ];
 
   return (
-    <div className={styles['video-background'] /* or just "video-background" if global CSS */}>
+    <div className={styles.videoBackground /* or just "video-background" if global CSS */}>
 
       {/* Video Section */}
       <div className={styles['video-container']}>
