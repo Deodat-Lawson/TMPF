@@ -47,7 +47,6 @@ const Home: React.FC = () => {
   return (
     <div className={styles.videoBackground}>
       {/* Navbar */}
-      {/*<Navbar />*/}
 
       {/* Video container */}
       <div className={styles.videoContainer}>

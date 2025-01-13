@@ -1,180 +1,88 @@
-"use client"
+"use client";
 import React from 'react';
-import { useRouter } from 'next/navigation';
-import {
-  Search,
-  BookOpen,
-  School,
-  Clock,
-  FileText,
-  MessageSquare
-} from 'lucide-react';
+import Link from 'next/link';
+import { Clock, BookOpen, School, Target, Calendar, Award } from 'lucide-react';
 import styles from '../../styles/Service.module.css';
 
-const ServicesPage = () => {
-  const router = useRouter();
+interface ServiceCard {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  path: string;
+  status: 'available' | 'coming-soon';
+}
 
-  const services = [
+const ServicesPage = () => {
+  const services: ServiceCard[] = [
     {
-      icon: <Search size={40} />,
-      title: 'University Matching',
-      description: 'Our AI-powered algorithm analyzes your academic profile, interests, and career goals to match you with universities that align perfectly with your aspirations.',
-      features: [
-        'Personalized university recommendations',
-        'Admission likelihood assessment',
-        'Program compatibility analysis'
-      ],
-      path: '/services/university-matching'
+      title: "Pomodoro Timer",
+      description: "Boost your productivity with our customizable Pomodoro timer. Track your study sessions and breaks effectively.",
+      icon: <Clock size={32} />,
+      path: "/timer",
+      status: "available"
     },
     {
-      icon: <BookOpen size={40} />,
-      title: 'Application Guidance',
-      description: 'Get comprehensive support throughout your application process with expert guidance on documentation, essays, and requirements.',
-      features: [
-        'Application timeline planning',
-        'Document checklist management',
-        'Essay review and feedback'
-      ],
-      path: '/services/application-guidance'
+      title: "University Application Planning",
+      description: "Get personalized university recommendations based on your academic profile and preferences.",
+      icon: <School size={32} />,
+      path: "/universityApp/form",
+      status: "available"
     },
     {
-      icon: <School size={40} />,
-      title: 'Career Planning',
-      description: 'Make informed decisions about your academic path by understanding how it aligns with your future career goals.',
-      features: ['Career path exploration', 'Industry insights', 'Skills gap analysis'],
-      path: '/services/career-planning'
+      title: "Study Resources",
+      description: "Access comprehensive study materials, guides, and resources to support your academic journey.",
+      icon: <BookOpen size={32} />,
+      path: "/resources",
+      status: "coming-soon"
     },
     {
-      icon: <Clock size={40} />,
-      title: 'Study Management',
-      description: 'Boost your productivity with our integrated study tools including Pomodoro timer and task management features.',
-      features: [
-        'Pomodoro technique timer',
-        'Study schedule planner',
-        'Progress tracking'
-      ],
-      path: '/services/study-management'
+      title: "Goal Setting",
+      description: "Set and track your academic goals with our intuitive goal management system.",
+      icon: <Target size={32} />,
+      path: "/goals",
+      status: "coming-soon"
     },
     {
-      icon: <FileText size={40} />,
-      title: 'Document Preparation',
-      description: 'Get assistance with preparing and organizing all necessary documents for your university applications.',
-      features: [
-        'Document templates',
-        'Format checking',
-        'Digital portfolio organization'
-      ],
-      path: '/services/document-preparation'
+      title: "Application Timeline",
+      description: "Stay organized with our interactive university application timeline and deadline tracker.",
+      icon: <Calendar size={32} />,
+      path: "/timeline",
+      status: "coming-soon"
     },
     {
-      icon: <MessageSquare size={40} />,
-      title: 'AI Consultation',
-      description: 'Access our AI education experts for personalized advice and immediate responses to your questions.',
-      features: [
-        '24/7 AI support',
-        'Personalized guidance',
-        'Quick query resolution'
-      ],
-      path: '/services/ai-consultation'
+      title: "Achievement Tracking",
+      description: "Record and showcase your academic achievements, extracurricular activities, and awards.",
+      icon: <Award size={32} />,
+      path: "/achievements",
+      status: "coming-soon"
     }
   ];
 
-
   return (
     <div className={styles.container}>
-      <div className={styles.videoContainer}>
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className={styles.backgroundVideo}
-        >
-          <source src="/HomeBackground.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <div className={styles.videoOverlay} />
+      <div className={styles.header}>
+        <h1>Our Services</h1>
+        <p>Explore our suite of tools designed to help you succeed in your academic journey</p>
       </div>
 
-
-      {/* Hero Section */}
-      <div className={styles.heroSection}>
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>
-            Comprehensive University Planning Services
-          </h1>
-          <p className={styles.heroDescription}>
-            From university selection to application submission, we provide all the tools and guidance you need for your
-            academic journey.
-          </p>
-        </div>
-      </div>
-
-      {/* Services Grid */}
-      <div className={styles.servicesContainer}>
-        <div className={styles.servicesGrid}>
-          {services.map((service, index) => (
-            <button
-              key={index}
-              type="button"
-              onClick={() => router.push(service.path)}
-              className={styles.serviceCard}
-              style={{
-                // Remove default button styles to preserve your existing CSS
-                background: 'none',
-                border: 'none',
-                padding: 0,
-                margin: 0,
-                textAlign: 'inherit',
-                cursor: 'pointer'
-              }}
-            >
-              <div className={styles.serviceContent}>
-                <div className={styles.serviceIcon}>
-                  {service.icon}
-                </div>
-                <h3 className={styles.serviceTitle}>
-                  {service.title}
-                </h3>
-                <p className={styles.serviceDescription}>
-                  {service.description}
-                </p>
-                <ul className={styles.featuresList}>
-                  {service.features.map((feature, idx) => (
-                    <li key={idx} className={styles.featureItem}>
-                      <div className={styles.featureDot} />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* CTA Section */}
-      <div className={styles.ctaSection}>
-        <div className={styles.ctaContent}>
-          <h2 className={styles.ctaTitle}>
-            Ready to Start Your Journey?
-          </h2>
-          <p className={styles.ctaDescription}>
-            Try our AI-powered university planning tools and take the first step towards your academic success.
-          </p>
-          <button
-            onClick={() => router.push('/universityApp/form')}
-            className={styles.ctaButton}
+      <div className={styles.servicesGrid}>
+        {services.map((service, index) => (
+          <Link
+            href={service.status === 'available' ? service.path : '#'}
+            key={index}
+            className={`${styles.serviceCard} ${service.status === 'coming-soon' ? styles.comingSoon : ''}`}
           >
-            Get Started Now
-          </button>
-        </div>
+            <div className={styles.iconContainer}>
+              {service.icon}
+            </div>
+            <h2>{service.title}</h2>
+            <p>{service.description}</p>
+            {service.status === 'coming-soon' && (
+              <span className={styles.comingSoonBadge}>Coming Soon</span>
+            )}
+          </Link>
+        ))}
       </div>
-
-      {/* Footer */}
-      <footer className={styles.footer}>
-        <p>© 2024 Nora AI. All rights reserved.</p>
-      </footer>
     </div>
   );
 };
