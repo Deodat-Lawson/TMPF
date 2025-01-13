@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Typography, Container} from "@mui/material";
 import { Play, Pause, Clock } from 'lucide-react';
+import { useUser } from "@clerk/nextjs";
 
 
 interface TimerProps {
@@ -13,6 +14,9 @@ interface TimerProps {
 
 
 const Timer: React.FC<TimerProps> = ({ workDuration = 25, breakDuration = 5 }) => {
+
+  const { user } = useUser();
+
   const [time, setTime] = useState(workDuration * 60);
   const [isActive, setIsActive] = useState(false);
   const [isWorkSession, setIsWorkSession] = useState(true);
@@ -102,7 +106,7 @@ const Timer: React.FC<TimerProps> = ({ workDuration = 25, breakDuration = 5 }) =
             color: 'white',
             fontSize: '2rem'
           }}>
-            Welcome, {"Guest"}
+            Welcome, { user?.username || "Guest"}
           </Typography>
 
           <div style={{

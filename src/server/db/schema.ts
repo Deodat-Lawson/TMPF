@@ -18,19 +18,18 @@ import {
  */
 export const createTable = pgTableCreator((name) => `nora_ai_${name}`);
 
-export const posts = createTable(
-  "post",
+export const users = createTable(
+  "users",
   {
     id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-    name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-      () => new Date()
-    ),
+    userName: varchar("name", { length: 256 }).notNull(),
+    userId: varchar("userId", { length: 256 }).notNull(),
+
+    createdAt: timestamp("created_at", { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`).notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(() => new Date()),
+
   },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
+  (users) => ({
+    uniqueUserId: index(users.userId).unique(),
   })
 );

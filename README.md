@@ -1,6 +1,6 @@
 # Tasks to do
 ## Deployment
-- [ ] Make project deployable on vercel
+- [X] Make project deployable on vercel
 
 ## Timer Page
 - [ ] Implement login system and have it integrated into the timer
