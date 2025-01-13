@@ -5,7 +5,15 @@ import { Button, Typography, Container} from "@mui/material";
 import { Play, Pause, Clock } from 'lucide-react';
 import { useAuth } from "@clerk/clerk-react";
 
-const Timer = ({ workDuration = 25, breakDuration = 5 }) => {
+
+interface TimerProps {
+  workDuration?: number;
+  breakDuration?: number;
+}
+
+
+
+const Timer: React.FC<TimerProps> = ({ workDuration = 25, breakDuration = 5 }) => {
   const [time, setTime] = useState(workDuration * 60);
   const [isActive, setIsActive] = useState(false);
   const [isWorkSession, setIsWorkSession] = useState(true);
