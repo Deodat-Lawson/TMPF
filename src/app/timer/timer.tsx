@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Typography, Container} from "@mui/material";
 import { Play, Pause, Clock } from 'lucide-react';
-import { useAuth } from "@clerk/clerk-react";
 
 
 interface TimerProps {
