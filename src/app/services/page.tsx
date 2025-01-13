@@ -1,160 +1,182 @@
-'use client';
-
+"use client"
 import React from 'react';
-import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import {
+  Search,
+  BookOpen,
+  School,
+  Clock,
+  FileText,
+  MessageSquare
+} from 'lucide-react';
+import styles from '../../styles/Service.module.css';
 
+const ServicesPage = () => {
+  const router = useRouter();
 
-// If using CSS modules:
-import styles from '~/styles/Service.module.css';
-
-// If you’re using a global stylesheet, comment the above line and use:
-// import '../../globals.css';
-
-export default function Services() {
   const services = [
     {
-      title: 'Quick Guide',
-      description:
-        'Get an idea of where you are at in the process of application and what you need to do next.',
-      features: [
-        'University Recommendation',
-        'Current Application Overview',
-        'General Overview',
-      ],
-      link: '/universityApp/',
-    },
-    {
-      title: 'Pomodoro Timer (Beta)',
-      description:
-        'Improve your productivity and focus with the Pomodoro technique. Our timer helps you break down work into intervals, allowing you to work efficiently and take regular breaks.',
-      features: [
-        'Customizable work intervals',
-        'Break reminders',
-        'Task tracking',
-        'Progress visualization',
-        'Time management tips',
-      ],
-      link: '/timer',
-    },
-    {
+      icon: <Search size={40} />,
       title: 'University Matching',
-      description:
-        'Our comprehensive university matching service helps you find the perfect institution based on your academic profile, interests, and career goals. We analyze factors such as academic programs, campus culture, location, and admission requirements to provide personalized recommendations.',
+      description: 'Our AI-powered algorithm analyzes your academic profile, interests, and career goals to match you with universities that align perfectly with your aspirations.',
       features: [
-        'Personalized university shortlisting',
-        'Academic profile evaluation',
-        'Admission probability assessment',
-        'Location and culture matching',
-        'Budget and financial aid guidance',
+        'Personalized university recommendations',
+        'Admission likelihood assessment',
+        'Program compatibility analysis'
       ],
-      link: '/featureUnavailable',
+      path: '/services/university-matching'
     },
     {
+      icon: <BookOpen size={40} />,
       title: 'Application Guidance',
-      description:
-        'Navigate the complex university application process with confidence. Our experienced counselors provide step-by-step guidance on applications, essays, and documentation requirements for your target universities.',
+      description: 'Get comprehensive support throughout your application process with expert guidance on documentation, essays, and requirements.',
       features: [
-        'Application strategy planning',
-        'Essay writing assistance',
-        'Document preparation support',
-        'Portfolio development',
-        'Interview preparation',
+        'Application timeline planning',
+        'Document checklist management',
+        'Essay review and feedback'
       ],
-      link: '/featureUnavailable',
+      path: '/services/application-guidance'
     },
     {
+      icon: <School size={40} />,
       title: 'Career Planning',
-      description:
-        'Build a strong foundation for your future career. Our career planning services help you align your academic choices with your professional aspirations, ensuring you’re on the right path to achieve your career goals.',
-      features: [
-        'Career assessment and exploration',
-        'Major selection guidance',
-        'Industry insights and trends',
-        'Internship planning',
-        'Professional development roadmap',
-      ],
-      link: '/featureUnavailable',
+      description: 'Make informed decisions about your academic path by understanding how it aligns with your future career goals.',
+      features: ['Career path exploration', 'Industry insights', 'Skills gap analysis'],
+      path: '/services/career-planning'
     },
+    {
+      icon: <Clock size={40} />,
+      title: 'Study Management',
+      description: 'Boost your productivity with our integrated study tools including Pomodoro timer and task management features.',
+      features: [
+        'Pomodoro technique timer',
+        'Study schedule planner',
+        'Progress tracking'
+      ],
+      path: '/services/study-management'
+    },
+    {
+      icon: <FileText size={40} />,
+      title: 'Document Preparation',
+      description: 'Get assistance with preparing and organizing all necessary documents for your university applications.',
+      features: [
+        'Document templates',
+        'Format checking',
+        'Digital portfolio organization'
+      ],
+      path: '/services/document-preparation'
+    },
+    {
+      icon: <MessageSquare size={40} />,
+      title: 'AI Consultation',
+      description: 'Access our AI education experts for personalized advice and immediate responses to your questions.',
+      features: [
+        '24/7 AI support',
+        'Personalized guidance',
+        'Quick query resolution'
+      ],
+      path: '/services/ai-consultation'
+    }
   ];
 
-  return (
-    <div className={styles.videoBackground /* or just "video-background" if global CSS */}>
 
-      {/* Video Section */}
-      <div className={styles['video-container']}>
+  return (
+    <div className={styles.container}>
+      <div className={styles.videoContainer}>
         <video
           autoPlay
           muted
           loop
           playsInline
-          className={styles['background-video']}
+          className={styles.backgroundVideo}
         >
           <source src="/HomeBackground.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-
-        <div className={styles['video-overlay']} />
+        <div className={styles.videoOverlay} />
       </div>
 
-      {/* Services Content */}
-      <div
-        className={styles['services-page']}
-        style={{ paddingTop: '64px', width: '65%', margin: '0 auto' }}
-      >
-        {/* Header Section */}
-        <div className={styles['services-header']}>
-          <h1>Our Services</h1>
-          <p>
-            Comprehensive support for your academic journey, from university
-            selection to career planning.
+
+      {/* Hero Section */}
+      <div className={styles.heroSection}>
+        <div className={styles.heroContent}>
+          <h1 className={styles.heroTitle}>
+            Comprehensive University Planning Services
+          </h1>
+          <p className={styles.heroDescription}>
+            From university selection to application submission, we provide all the tools and guidance you need for your
+            academic journey.
           </p>
         </div>
+      </div>
 
-        {/* Services Section */}
-        <div className={styles['services-container']}>
-          <div className={styles['services-grid']}>
-            {services.map((service, index) => (
-              <div key={index} className={styles['service-card']}>
-                <div className={styles['service-header']}>
-                  {/* If you had a custom icon per service, you could replace `service.icon` here. */}
-                  <div className={styles['service-icon']}>
-                    {/* Placeholder or actual icon */}
-                    {/* e.g. <SomeIcon size={32} /> */}
-                  </div>
-                  <h2>{service.title}</h2>
+      {/* Services Grid */}
+      <div className={styles.servicesContainer}>
+        <div className={styles.servicesGrid}>
+          {services.map((service, index) => (
+            <button
+              key={index}
+              type="button"
+              onClick={() => router.push(service.path)}
+              className={styles.serviceCard}
+              style={{
+                // Remove default button styles to preserve your existing CSS
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                margin: 0,
+                textAlign: 'inherit',
+                cursor: 'pointer'
+              }}
+            >
+              <div className={styles.serviceContent}>
+                <div className={styles.serviceIcon}>
+                  {service.icon}
                 </div>
-
-                <p className={styles['service-description']}>
+                <h3 className={styles.serviceTitle}>
+                  {service.title}
+                </h3>
+                <p className={styles.serviceDescription}>
                   {service.description}
                 </p>
-
-                <div className={styles['features-container']}>
-                  <h3>Key Features:</h3>
-                  <ul className={styles['features-list']}>
-                    {service.features.map((feature, idx) => (
-                      <li key={idx}>
-                        <div className={styles['feature-dot']} />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Use Next.js <Link> for client-side routing */}
-                <Link href={service.link} className={styles['learn-more-link']}>
-                  Learn More <ArrowRight size={20} />
-                </Link>
+                <ul className={styles.featuresList}>
+                  {service.features.map((feature, idx) => (
+                    <li key={idx} className={styles.featureItem}>
+                      <div className={styles.featureDot} />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
               </div>
-            ))}
-          </div>
+            </button>
+          ))}
         </div>
-
-        {/* Footer */}
-        <footer className={styles['services-footer']}>
-          <p>© 2024 The Most Promising Future. All rights reserved.</p>
-        </footer>
       </div>
+
+      {/* CTA Section */}
+      <div className={styles.ctaSection}>
+        <div className={styles.ctaContent}>
+          <h2 className={styles.ctaTitle}>
+            Ready to Start Your Journey?
+          </h2>
+          <p className={styles.ctaDescription}>
+            Try our AI-powered university planning tools and take the first step towards your academic success.
+          </p>
+          <button
+            onClick={() => router.push('/universityApp/form')}
+            className={styles.ctaButton}
+          >
+            Get Started Now
+          </button>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className={styles.footer}>
+        <p>© 2024 Nora AI. All rights reserved.</p>
+      </footer>
     </div>
   );
-}
+};
+
+export default ServicesPage;
