@@ -1,0 +1,202 @@
+/* TaskManagement.module.css */
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    padding-top: 5rem;
+}
+
+/* Tasks Section Wrapper */
+.tasksDisplay {
+    margin-bottom: 40px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.tasksHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+/* Header Title */
+.title {
+    font-size: 1.8rem;
+    color: #1a365d;
+    margin: 0;
+}
+
+/* Add Task Button */
+.btnAddNewTask {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Tasks List Container */
+.tasksList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Single Task Item */
+.taskItem {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+    gap: 16px;
+}
+
+/* Check/Complete Button */
+.checkBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+}
+
+/* Task Text Container */
+.taskContent {
+    flex: 1;
+}
+
+/* Task Title */
+.taskTitle {
+    margin: 0 0 4px 0;
+    color: #1a365d;
+    text-decoration: none;
+}
+
+/* Completed Task Title */
+.taskTitleCompleted {
+    margin: 0 0 4px 0;
+    color: #94a3b8;
+    text-decoration: line-through;
+}
+
+/* Task Info (Due date, Priority) */
+.taskInfo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.taskInfoItem {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Delete Button */
+.deleteBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #ef4444;
+}
+
+/* Empty List Text */
+.emptyList {
+    text-align: center;
+    padding: 40px;
+    color: #64748b;
+}
+
+/* Modal Overlay */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 1000;
+}
+
+/* Modal Content */
+.modalContent {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Modal Title */
+.modalTitle {
+    font-size: 1.8rem;
+    color: #1a365d;
+    margin-bottom: 24px;
+}
+
+/* Form Group */
+.formGroup {
+    margin-bottom: 20px;
+}
+
+/* Label */
+.formLabel {
+    display: block;
+    margin-bottom: 8px;
+    color: #1a365d;
+    font-weight: 500;
+}
+
+/* Input, Select */
+.formControl {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    font-size: 1rem;
+}
+
+/* Modal Action Buttons Container */
+.actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+/* Cancel Button */
+.btnCancel {
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: #64748b;
+    cursor: pointer;
+}
+
+/* Submit Button */
+.btnSubmit {
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+}
