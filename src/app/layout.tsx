@@ -14,7 +14,6 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: {
   children: React.ReactNode;
-  modal: React.ReactNode;
 }) {
   return (
     <ClerkProvider>
