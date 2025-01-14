@@ -21,10 +21,14 @@ export async function POST(request: Request) {
       );
     }
 
+    const userTasks = await db
+      .select()
+      .from(tasks)
+      .where(eq(tasks.userId, userInfo.id));
 
+    // Return the tasks as JSON
+    return NextResponse.json(userTasks, { status: 200 });
 
-    // Return as JSON
-    return NextResponse.json(docs, { status: 200 });
   } catch (error: any) {
     console.error("Error fetching documents:", error);
     return NextResponse.json(
