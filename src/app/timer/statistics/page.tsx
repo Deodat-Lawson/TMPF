@@ -293,7 +293,7 @@ const StatisticsPage: React.FC = () => {
           <Button
             variant="outlined"
             sx={{ marginTop: "2rem", color: "white", borderColor: "white" }}
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/timer")}
           >
             Back to Home
           </Button>
