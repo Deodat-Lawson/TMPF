@@ -1,79 +1,58 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Typography,
-  Container,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Menu,
-  IconButton,
-} from "@mui/material";
-import { Play, Pause, Clock, List as ListIcon, Settings } from "lucide-react";
+import { Container, Button, Typography } from "@mui/material";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
-
-// Import the CSS module
 import styles from "../../styles/Timer/TimerHome.module.css";
-interface Task {
-  id: number;
-  name: string;
-}
+import TasksDrawer, { Task } from "./TasksDrawer";
+import TimerStopwatchHeader from "./Header";
+import TimerStopwatchDisplay from "./TimerStopwatchDisplay";
+import TimerStopwatchActions from "./TimerStopwatchActions";
+import TimerStopwatchSettings from "./TimerStopwatchSettings";
 
 const TimerAndStopwatchPage: React.FC = () => {
-  // -----------------------
-  //  USER & GENERAL STATE
-  // -----------------------
   const { user } = useUser();
   const router = useRouter();
 
-  // Example tasks
+  // ----------------------------------
+  //  TASKS + DRAWER STATE
+  // ----------------------------------
   const [tasks] = useState<Task[]>([
     { id: 1, name: "Finish Chapter 1" },
     { id: 2, name: "Review PR #23" },
     { id: 3, name: "Design Landing Page" },
   ]);
-
-  // Manage Drawer (Side Navigation)
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  // For controlling the Settings menu
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-  // Currently selected task
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // -----------------------
-  //   TIMER/STOPWATCH STATE
-  // -----------------------
+  const handleToggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
+  const handleTaskClick = (task: Task) => {
+    setSelectedTask(task);
+    setIsDrawerOpen(false);
+  };
+
+  // ----------------------------------
+  //  TIMER/STOPWATCH STATE
+  // ----------------------------------
   const [isTimerMode, setIsTimerMode] = useState(true); // true => Timer, false => Stopwatch
-  const [category, setCategory] = useState("Default Category");
-
-  const [workDuration, setWorkDuration] = useState(25);
-  const [breakDuration, setBreakDuration] = useState(5);
-
-  const [time, setTime] = useState(workDuration * 60);
   const [isActive, setIsActive] = useState(false);
   const [isWorkSession, setIsWorkSession] = useState(true);
 
-  // -----------------------
-  //       USEEFFECTS
-  // -----------------------
-  // Handle Timer logic
+  const [workDuration, setWorkDuration] = useState(25);
+  const [breakDuration, setBreakDuration] = useState(5);
+  const [time, setTime] = useState(workDuration * 60);
+
+  const [category, setCategory] = useState("Default Category");
+
+  // ----------------------------------
+  //  USE EFFECT: TIMER
+  // ----------------------------------
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
     if (isTimerMode && isActive) {
-      interval = setInterval(() => {
-        setTime((prevTime) => prevTime - 1);
-      }, 1000);
+      interval = setInterval(() => setTime((prev) => prev - 1), 1000);
     }
     if (isTimerMode && time === 0) {
       clearInterval(interval);
@@ -82,42 +61,33 @@ const TimerAndStopwatchPage: React.FC = () => {
       setIsActive(false);
     }
     return () => clearInterval(interval);
-  }, [isTimerMode, isActive, time, isWorkSession, breakDuration, workDuration]);
+  }, [isTimerMode, isActive, time, isWorkSession, workDuration, breakDuration]);
 
-  // Handle Stopwatch logic
+  // ----------------------------------
+  //  USE EFFECT: STOPWATCH
+  // ----------------------------------
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
     if (!isTimerMode && isActive) {
-      interval = setInterval(() => {
-        setTime((prevTime) => prevTime + 1);
-      }, 1000);
+      interval = setInterval(() => setTime((prev) => prev + 1), 1000);
     }
     return () => clearInterval(interval);
   }, [isActive, isTimerMode]);
 
-  // Update time whenever user changes durations (Timer mode)
+  // ----------------------------------
+  //  Update time on input changes
+  // ----------------------------------
   useEffect(() => {
     if (isTimerMode) {
       setTime(isWorkSession ? workDuration * 60 : breakDuration * 60);
     }
   }, [workDuration, breakDuration, isTimerMode, isWorkSession]);
 
-  // -----------------------
-  //      HANDLERS
-  // -----------------------
-  const handleToggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
+  // ----------------------------------
+  //  HANDLERS
+  // ----------------------------------
+  const handleStartPause = () => setIsActive(!isActive);
 
-  const handleTaskClick = (task: Task) => {
-    setSelectedTask(task);
-    setIsDrawerOpen(false);
-  };
-
-  // Start/Pause
-  const handleStartPause = () => {
-    setIsActive(!isActive);
-  };
-
-  // Reset
   const handleReset = () => {
     setIsActive(false);
     if (isTimerMode) {
@@ -127,36 +97,37 @@ const TimerAndStopwatchPage: React.FC = () => {
     }
   };
 
-  // Format time as mm:ss
+  const handleSwitchToTimer = () => {
+    setIsActive(false);
+    setIsTimerMode(true);
+    setTime(isWorkSession ? workDuration * 60 : breakDuration * 60);
+  };
+
+  const handleSwitchToStopwatch = () => {
+    setIsActive(false);
+    setIsTimerMode(false);
+    setTime(0);
+  };
+
   const formatTime = (t: number) => {
     const minutes = Math.floor(t / 60);
     const seconds = t % 60;
     return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
   };
 
-  // Settings menu
-  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+  // ----------------------------------
+  //  SETTINGS MENU NAV
+  // ----------------------------------
+  const handleManageTasks = () => {
+    router.push("/timer/manage-tasks"); // or your actual path
   };
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
-
-  // Navigate to other pages
-  const goToManageTasks = () => {
-    handleCloseMenu();
-    router.push("/manage-tasks");
-  };
-  const goToStatistics = () => {
-    handleCloseMenu();
-    router.push("/statistics");
+  const handleShowStatistics = () => {
+    router.push("/timer/statistics"); // or your actual path
   };
 
-  const isTaskSelected = (task: Task) => task.id === selectedTask?.id;
-
-  // -----------------------
-  //     RENDER
-  // -----------------------
+  // ----------------------------------
+  //  RENDER
+  // ----------------------------------
   return (
     <div className={styles.pageContainer}>
       {/* Animated background shapes */}
@@ -172,113 +143,27 @@ const TimerAndStopwatchPage: React.FC = () => {
         />
       ))}
 
-      {/* SIDE DRAWER FOR TASKS */}
-      <Drawer
+      {/* Drawer for Tasks */}
+      <TasksDrawer
         open={isDrawerOpen}
+        tasks={tasks}
+        selectedTaskId={selectedTask?.id}
         onClose={handleToggleDrawer}
-        classes={{ paper: styles.drawerPaper }}
-      >
-        <Typography
-          variant="h6"
-          sx={{ padding: "1rem", textAlign: "center", color: "white" }}
-        >
-          Tasks
-        </Typography>
-        <List>
-          {tasks.map((task) => (
-            <ListItem
-              button
-              key={task.id}
-              onClick={() => handleTaskClick(task)}
-              className={`
-                ${styles.taskListItem} 
-                ${isTaskSelected(task) ? styles.taskListItemSelected : ""}
-              `}
-            >
-              <ListItemText primary={task.name} />
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
+        onTaskClick={handleTaskClick}
+      />
 
-      {/* MAIN CONTAINER */}
       <Container className={styles.mainContainer}>
         <div className={styles.glassContainer}>
-          {/* Top area: Greeting & Buttons */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginBottom: "2rem",
-              alignItems: "center",
-            }}
-          >
-            <Typography
-              variant="h4"
-              style={{
-                color: "white",
-                fontSize: "2rem",
-                margin: 0,
-              }}
-            >
-              Welcome, {user?.username || "Guest"}
-            </Typography>
+          {/* HEADER */}
+          <TimerStopwatchHeader
+            username={user?.username || "Guest"}
+            selectedTaskName={selectedTask?.name}
+            onToggleDrawer={handleToggleDrawer}
+            onManageTasks={handleManageTasks}
+            onShowStatistics={handleShowStatistics}
+          />
 
-            <div style={{ display: "flex", gap: "1rem" }}>
-              {/* Tasks Button */}
-              <Button
-                variant="outlined"
-                style={{ color: "white", borderColor: "white" }}
-                onClick={handleToggleDrawer}
-                startIcon={<ListIcon size={20} />}
-              >
-                Tasks
-              </Button>
-
-              {/* Settings Icon Button -> triggers a Menu */}
-              <IconButton
-                onClick={handleOpenMenu}
-                style={{ color: "white" }}
-              >
-                <Settings />
-              </IconButton>
-
-              {/* The Menu itself */}
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleCloseMenu}
-              >
-                <MenuItem onClick={goToManageTasks}>Manage Tasks</MenuItem>
-                <MenuItem onClick={goToStatistics}>Show Statistics</MenuItem>
-              </Menu>
-            </div>
-          </div>
-
-          {/* Currently selected task */}
-          {selectedTask ? (
-            <Typography
-              style={{
-                fontSize: "1.2rem",
-                marginBottom: "1.5rem",
-                color: "rgba(255, 255, 255, 0.9)",
-              }}
-            >
-              Now viewing: <strong>{selectedTask.name}</strong>
-            </Typography>
-          ) : (
-            <Typography
-              style={{
-                fontSize: "1.2rem",
-                marginBottom: "1.5rem",
-                color: "rgba(255, 255, 255, 0.9)",
-              }}
-            >
-              No task selected
-            </Typography>
-          )}
-
-          {/* Timer/Stopwatch Toggle */}
+          {/* TIMER/STOPWATCH TOGGLE */}
           <div style={{ marginBottom: "2rem" }}>
             <Button
               variant={isTimerMode ? "contained" : "outlined"}
@@ -287,13 +172,7 @@ const TimerAndStopwatchPage: React.FC = () => {
                 backgroundColor: isTimerMode ? "white" : "transparent",
                 color: isTimerMode ? "#2563eb" : "white",
               }}
-              onClick={() => {
-                setIsActive(false);
-                setTime(
-                  isWorkSession ? workDuration * 60 : breakDuration * 60
-                );
-                setIsTimerMode(true);
-              }}
+              onClick={handleSwitchToTimer}
             >
               Timer
             </Button>
@@ -303,42 +182,20 @@ const TimerAndStopwatchPage: React.FC = () => {
                 backgroundColor: !isTimerMode ? "white" : "transparent",
                 color: !isTimerMode ? "#2563eb" : "white",
               }}
-              onClick={() => {
-                setIsActive(false);
-                setTime(0);
-                setIsTimerMode(false);
-              }}
+              onClick={handleSwitchToStopwatch}
             >
               Stopwatch
             </Button>
           </div>
 
-          {/* Timer/Stopwatch Display */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Clock size={32} style={{ marginRight: "1rem" }} />
-            <Typography className={styles.pulse}>{formatTime(time)}</Typography>
-          </div>
+          {/* TIMER/STOPWATCH DISPLAY */}
+          <TimerStopwatchDisplay
+            timeString={formatTime(time)}
+            isTimerMode={isTimerMode}
+            isWorkSession={isWorkSession}
+          />
 
-          {/* Work/Break Label (only if Timer mode) */}
-          {isTimerMode && (
-            <Typography
-              style={{
-                fontSize: "1.5rem",
-                marginBottom: "2rem",
-                color: "rgba(255, 255, 255, 0.9)",
-              }}
-            >
-              {isWorkSession ? "Work Session" : "Break Time"}
-            </Typography>
-          )}
-
-          {/* Category */}
+          {/* CATEGORY (just a label) */}
           <Typography
             style={{
               fontSize: "1.1rem",
@@ -350,182 +207,22 @@ const TimerAndStopwatchPage: React.FC = () => {
           </Typography>
 
           {/* START/PAUSE & RESET BUTTONS */}
-          <div style={{ marginBottom: "2rem" }}>
-            <Button
-              variant="contained"
-              onClick={handleStartPause}
-              style={{
-                backgroundColor: "white",
-                color: "#2563eb",
-                padding: "12px 32px",
-                fontSize: "1.2rem",
-                borderRadius: "12px",
-                transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                marginRight: "1rem",
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = "translateY(-2px)";
-                e.currentTarget.style.boxShadow =
-                  "0 6px 20px rgba(0, 0, 0, 0.2)";
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow =
-                  "0 4px 6px rgba(0, 0, 0, 0.1)";
-              }}
-            >
-              {isActive ? (
-                <>
-                  <Pause size={24} /> Pause
-                </>
-              ) : (
-                <>
-                  <Play size={24} /> Start
-                </>
-              )}
-            </Button>
+          <TimerStopwatchActions
+            isActive={isActive}
+            onStartPause={handleStartPause}
+            onReset={handleReset}
+          />
 
-            <Button
-              variant="outlined"
-              onClick={handleReset}
-              style={{
-                color: "white",
-                borderColor: "white",
-                padding: "12px 32px",
-                fontSize: "1.2rem",
-                borderRadius: "12px",
-                transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              Reset
-            </Button>
-          </div>
-
-          {/* Settings Panel: Work/Break + Category */}
-          <div className={styles.settingsPanel}>
-            {isTimerMode && (
-              <>
-                <TextField
-                  label="Work (minutes)"
-                  type="number"
-                  variant="outlined"
-                  value={workDuration}
-                  onChange={(e) =>
-                    setWorkDuration(parseInt(e.target.value, 10))
-                  }
-                  inputProps={{ min: 1 }}
-                  sx={{
-                    maxWidth: "130px",
-                    "& .MuiOutlinedInput-root": {
-                      borderRadius: "8px",
-                      color: "white",
-                      "& fieldset": {
-                        borderColor: "rgba(255, 255, 255, 0.4)",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "rgba(255, 255, 255, 0.7)",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#ffffff",
-                      },
-                    },
-                    "& .MuiInputLabel-root": {
-                      color: "rgba(255, 255, 255, 0.7)",
-                    },
-                    "& .MuiInputLabel-root.Mui-focused": {
-                      color: "#ffffff",
-                    },
-                    input: {
-                      color: "white",
-                    },
-                  }}
-                />
-
-                <TextField
-                  label="Break (minutes)"
-                  type="number"
-                  variant="outlined"
-                  value={breakDuration}
-                  onChange={(e) =>
-                    setBreakDuration(parseInt(e.target.value, 10))
-                  }
-                  inputProps={{ min: 1 }}
-                  sx={{
-                    maxWidth: "130px",
-                    "& .MuiOutlinedInput-root": {
-                      borderRadius: "8px",
-                      color: "white",
-                      "& fieldset": {
-                        borderColor: "rgba(255, 255, 255, 0.4)",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "rgba(255, 255, 255, 0.7)",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#ffffff",
-                      },
-                    },
-                    "& .MuiInputLabel-root": {
-                      color: "rgba(255, 255, 255, 0.7)",
-                    },
-                    "& .MuiInputLabel-root.Mui-focused": {
-                      color: "#ffffff",
-                    },
-                    input: {
-                      color: "white",
-                    },
-                  }}
-                />
-              </>
-            )}
-
-            <FormControl
-              variant="outlined"
-              sx={{
-                minWidth: 150,
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "8px",
-                  color: "white",
-                  "& fieldset": {
-                    borderColor: "rgba(255, 255, 255, 0.4)",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "rgba(255, 255, 255, 0.7)",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#ffffff",
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  color: "rgba(255, 255, 255, 0.7)",
-                },
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "#ffffff",
-                },
-              }}
-            >
-              <InputLabel>Category</InputLabel>
-              <Select
-                value={category}
-                onChange={(e) => setCategory(e.target.value as string)}
-                label="Category"
-                style={{
-                  backgroundColor: "transparent",
-                }}
-              >
-                <MenuItem value="Default Category">Default Category</MenuItem>
-                <MenuItem value="Coding">Coding</MenuItem>
-                <MenuItem value="Reading">Reading</MenuItem>
-                <MenuItem value="Exercise">Exercise</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
+          {/* SETTINGS PANEL (Work/Break + Category) */}
+          <TimerStopwatchSettings
+            isTimerMode={isTimerMode}
+            workDuration={workDuration}
+            breakDuration={breakDuration}
+            category={category}
+            setWorkDuration={(val) => setWorkDuration(val)}
+            setBreakDuration={(val) => setBreakDuration(val)}
+            setCategory={(val) => setCategory(val)}
+          />
         </div>
       </Container>
     </div>
