@@ -44,6 +44,7 @@ export const tasks = createTable("tasks", {
   userId: integer("user_id").notNull().references(users.id),
 
   name: varchar("name", { length: 256 }).notNull(),
+  description: varchar("description", { length: 256 }),
   timeSpent: integer("time_spent").notNull(),
   timeRemaining: integer("time_remaining").notNull(),
   mode: varchar("mode", { length: 256 }).notNull(),

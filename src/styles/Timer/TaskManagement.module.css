@@ -3,7 +3,6 @@
     background: linear-gradient(45deg, #1a365d, #2563eb);
     position: relative;
     overflow: hidden;
-    padding-top: 5rem;
 }
 
 .rotatingDiv {
@@ -15,7 +14,6 @@
     transform-origin: center center;
 }
 
-/* Keyframes */
 @keyframes rotate {
     0% {
         transform: rotate(0deg);
@@ -25,7 +23,7 @@
     }
 }
 
-/* Main Container for your MUI Container */
+/* Container for MUI's <Container> */
 .mainContainer {
     position: relative;
     z-index: 1;
@@ -37,7 +35,7 @@
     color: white;
 }
 
-/* Glassy container for the tasks section */
+/* Glass-like container around the tasks content */
 .glassContainer {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
@@ -50,14 +48,14 @@
     text-align: center;
 }
 
-/* Title styling */
+/* Page Title styling */
 .pageTitle {
     font-size: 2rem;
     margin-bottom: 1rem;
     color: white;
 }
 
-/* Form container for adding/updating tasks */
+/* Form at the top for adding a new task */
 .taskForm {
     display: flex;
     flex-direction: column;
@@ -65,10 +63,10 @@
     margin-bottom: 1.5rem;
 }
 
-/* Task list item container */
+/* Each task's container */
 .taskItem {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     border-radius: 8px;
     padding: 0.5rem 1rem;
@@ -80,13 +78,15 @@
     background-color: rgba(255, 255, 255, 0.15);
 }
 
-/* Inline edit form for tasks */
+/* Inline form for editing an existing task */
 .inlineForm {
     display: flex;
+    flex-direction: column;
     gap: 0.5rem;
-    align-items: center;
+    align-items: start;
 }
 
+/* Row of buttons (save/cancel) in the inline form */
 .buttonRow {
     display: flex;
     gap: 0.5rem;

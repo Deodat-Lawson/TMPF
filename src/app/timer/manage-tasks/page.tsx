@@ -1,87 +1,161 @@
 "use client";
 
+
 import React, { useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation"; // For navigation, if needed
+import { useRouter } from "next/navigation";
 import {
   Container,
   Typography,
   TextField,
   Button,
   IconButton,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
-import { Edit, Trash2, Save, XCircle } from "lucide-react"; // Icons for edit/delete
+import { Edit, Trash2, Save, XCircle } from "lucide-react";
 import styles from "../../../styles/Timer/TaskManagement.module.css";
-
+/**
+ * Each Task has:
+ * - id
+ * - name (required)
+ * - description (optional)
+ * - category
+ * - mode (Timer or Stopwatch)
+ * - priority (High, Medium, Low)
+ * - studyTime (only relevant if mode === 'Timer')
+ */
 interface Task {
   id: number;
   name: string;
-  description: string;
+  description?: string;
+  category: string;
+  mode: "Timer" | "Stopwatch";
+  priority: "High" | "Medium" | "Low";
+  studyTime?: number;
 }
 
 const ManageTasksPage: React.FC = () => {
   const { user } = useUser();
   const router = useRouter();
 
-  // Example tasks in local state
+  // Sample tasks in local state
   const [tasks, setTasks] = useState<Task[]>([
-    { id: 1, name: "Update Docs", description: "Add usage examples" },
-    { id: 2, name: "Fix Login Issue", description: "Check session tokens" },
+    {
+      id: 1,
+      name: "Review Project Requirements",
+      description: "Check if all acceptance criteria are met.",
+      category: "Work",
+      mode: "Timer",
+      priority: "High",
+      studyTime: 60, // minutes
+    },
+    {
+      id: 2,
+      name: "Practice Guitar",
+      category: "Hobby",
+      mode: "Stopwatch",
+      priority: "Medium",
+    },
   ]);
 
   // For creating a new task
-  const [newTaskName, setNewTaskName] = useState("");
-  const [newTaskDesc, setNewTaskDesc] = useState("");
+  const [newName, setNewName] = useState("");
+  const [newDescription, setNewDescription] = useState("");
+  const [newCategory, setNewCategory] = useState("General");
+  const [newMode, setNewMode] = useState<"Timer" | "Stopwatch">("Timer");
+  const [newPriority, setNewPriority] = useState<"High" | "Medium" | "Low">(
+    "Medium"
+  );
+  const [newStudyTime, setNewStudyTime] = useState<number>(30);
 
   // For editing an existing task
   const [editTaskId, setEditTaskId] = useState<number | null>(null);
   const [editName, setEditName] = useState("");
-  const [editDesc, setEditDesc] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editCategory, setEditCategory] = useState("General");
+  const [editMode, setEditMode] = useState<"Timer" | "Stopwatch">("Timer");
+  const [editPriority, setEditPriority] = useState<"High" | "Medium" | "Low">(
+    "Medium"
+  );
+  const [editStudyTime, setEditStudyTime] = useState<number>(30);
 
   // ---------------------------
   //   CREATE
   // ---------------------------
   const handleCreateTask = () => {
-    if (!newTaskName.trim()) return;
+    if (!newName.trim()) return;
+
     const newTask: Task = {
-      id: Date.now(), // simplistic approach
-      name: newTaskName,
-      description: newTaskDesc,
+      id: Date.now(), // simplistic ID
+      name: newName,
+      description: newDescription.trim() ? newDescription : undefined,
+      category: newCategory,
+      mode: newMode,
+      priority: newPriority,
+      // Only set studyTime if mode === 'Timer'
+      ...(newMode === "Timer" && { studyTime: newStudyTime }),
     };
     setTasks((prev) => [...prev, newTask]);
-    setNewTaskName("");
-    setNewTaskDesc("");
+
+    // Reset form
+    setNewName("");
+    setNewDescription("");
+    setNewCategory("General");
+    setNewMode("Timer");
+    setNewPriority("Medium");
+    setNewStudyTime(30);
   };
 
   // ---------------------------
-  //   EDIT (start)
+  //   START EDIT
   // ---------------------------
   const handleStartEdit = (task: Task) => {
     setEditTaskId(task.id);
     setEditName(task.name);
-    setEditDesc(task.description);
+    setEditDescription(task.description || "");
+    setEditCategory(task.category);
+    setEditMode(task.mode);
+    setEditPriority(task.priority);
+    setEditStudyTime(task.studyTime || 30);
   };
 
   // ---------------------------
-  //   EDIT (save)
+  //   SAVE EDIT
   // ---------------------------
   const handleSaveEdit = () => {
-    if (!editName.trim()) return;
+    if (!editName.trim() || editTaskId === null) return;
+
     setTasks((prev) =>
-      prev.map((t) =>
-        t.id === editTaskId ? { ...t, name: editName, description: editDesc } : t
-      )
+      prev.map((t) => {
+        if (t.id !== editTaskId) return t;
+        return {
+          ...t,
+          name: editName,
+          description: editDescription.trim() ? editDescription : undefined,
+          category: editCategory,
+          mode: editMode,
+          priority: editPriority,
+          studyTime: editMode === "Timer" ? editStudyTime : undefined,
+        };
+      })
     );
-    cancelEdit(); // reset the edit form
+    cancelEdit();
   };
 
   // ---------------------------
-  //   EDIT (cancel)
+  //   CANCEL EDIT
   // ---------------------------
   const cancelEdit = () => {
     setEditTaskId(null);
     setEditName("");
-    setEditDesc("");
+    setEditDescription("");
+    setEditCategory("General");
+    setEditMode("Timer");
+    setEditPriority("Medium");
+    setEditStudyTime(30);
   };
 
   // ---------------------------
@@ -93,7 +167,7 @@ const ManageTasksPage: React.FC = () => {
 
   return (
     <div className={styles.pageContainer}>
-      {/* Animated background shapes */}
+      {/* Animated background */}
       {[...Array(5)].map((_, i) => (
         <div
           key={i}
@@ -107,9 +181,7 @@ const ManageTasksPage: React.FC = () => {
       ))}
 
       <Container className={styles.mainContainer}>
-        <Typography className={styles.pageTitle}>
-          Manage Tasks
-        </Typography>
+        <Typography className={styles.pageTitle}>Manage Tasks</Typography>
         <Typography variant="body1" sx={{ fontSize: "1.2rem", marginBottom: "1rem" }}>
           Hello, {user?.username || "Guest"}! Create or update your tasks below:
         </Typography>
@@ -117,62 +189,86 @@ const ManageTasksPage: React.FC = () => {
         <div className={styles.glassContainer}>
           {/* CREATE NEW TASK FORM */}
           <div className={styles.taskForm}>
+            {/* Name */}
             <TextField
-              label="Task Name"
+              label="Name"
               variant="outlined"
-              value={newTaskName}
-              onChange={(e) => setNewTaskName(e.target.value)}
-              sx={{
-                backgroundColor: "rgba(255, 255, 255, 0.15)",
-                borderRadius: "8px",
-                "& .MuiOutlinedInput-root": {
-                  color: "white",
-                  "& fieldset": {
-                    borderColor: "rgba(255, 255, 255, 0.4)",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "rgba(255, 255, 255, 0.7)",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#ffffff",
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  color: "rgba(255, 255, 255, 0.7)",
-                },
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "#ffffff",
-                },
-              }}
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              sx={textFieldStyle}
             />
+
+            {/* Description (optional) */}
             <TextField
-              label="Description"
+              label="Description (Optional)"
               variant="outlined"
-              value={newTaskDesc}
-              onChange={(e) => setNewTaskDesc(e.target.value)}
-              sx={{
-                backgroundColor: "rgba(255, 255, 255, 0.15)",
-                borderRadius: "8px",
-                "& .MuiOutlinedInput-root": {
-                  color: "white",
-                  "& fieldset": {
-                    borderColor: "rgba(255, 255, 255, 0.4)",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "rgba(255, 255, 255, 0.7)",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#ffffff",
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  color: "rgba(255, 255, 255, 0.7)",
-                },
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "#ffffff",
-                },
-              }}
+              value={newDescription}
+              onChange={(e) => setNewDescription(e.target.value)}
+              sx={textFieldStyle}
             />
+
+            {/* Category */}
+            <FormControl variant="outlined" sx={formControlStyle}>
+              <InputLabel>Category</InputLabel>
+              <Select
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value as string)}
+                label="Category"
+                style={{ backgroundColor: "transparent" }}
+              >
+                <MenuItem value="General">General</MenuItem>
+                <MenuItem value="Work">Work</MenuItem>
+                <MenuItem value="Hobby">Hobby</MenuItem>
+                <MenuItem value="Exercise">Exercise</MenuItem>
+              </Select>
+            </FormControl>
+
+            {/* Mode */}
+            <FormControl variant="outlined" sx={formControlStyle}>
+              <InputLabel>Mode</InputLabel>
+              <Select
+                value={newMode}
+                onChange={(e) =>
+                  setNewMode(e.target.value as "Timer" | "Stopwatch")
+                }
+                label="Mode"
+                style={{ backgroundColor: "transparent" }}
+              >
+                <MenuItem value="Timer">Timer</MenuItem>
+                <MenuItem value="Stopwatch">Stopwatch</MenuItem>
+              </Select>
+            </FormControl>
+
+            {/* Priority */}
+            <FormControl variant="outlined" sx={formControlStyle}>
+              <InputLabel>Priority</InputLabel>
+              <Select
+                value={newPriority}
+                onChange={(e) =>
+                  setNewPriority(e.target.value as "High" | "Medium" | "Low")
+                }
+                label="Priority"
+                style={{ backgroundColor: "transparent" }}
+              >
+                <MenuItem value="High">High</MenuItem>
+                <MenuItem value="Medium">Medium</MenuItem>
+                <MenuItem value="Low">Low</MenuItem>
+              </Select>
+            </FormControl>
+
+            {/* Study Time (only if mode === 'Timer') */}
+            {newMode === "Timer" && (
+              <TextField
+                label="Study Time (minutes)"
+                type="number"
+                variant="outlined"
+                value={newStudyTime}
+                onChange={(e) => setNewStudyTime(parseInt(e.target.value, 10))}
+                inputProps={{ min: 1 }}
+                sx={textFieldStyle}
+              />
+            )}
+
             <Button
               variant="contained"
               sx={{
@@ -189,124 +285,156 @@ const ManageTasksPage: React.FC = () => {
           </div>
 
           {/* TASK LIST */}
-          {tasks.map((task) => (
-            <div key={task.id} className={styles.taskItem}>
-              {editTaskId === task.id ? (
-                /* --- EDIT MODE --- */
-                <div className={styles.inlineForm}>
-                  <TextField
-                    variant="outlined"
-                    value={editName}
-                    onChange={(e) => setEditName(e.target.value)}
-                    sx={{
-                      width: "150px",
-                      backgroundColor: "rgba(255, 255, 255, 0.15)",
-                      borderRadius: "8px",
-                      "& .MuiOutlinedInput-root": {
-                        color: "white",
-                        "& fieldset": {
-                          borderColor: "rgba(255, 255, 255, 0.4)",
-                        },
-                        "&:hover fieldset": {
-                          borderColor: "rgba(255, 255, 255, 0.7)",
-                        },
-                        "&.Mui-focused fieldset": {
-                          borderColor: "#ffffff",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        color: "rgba(255, 255, 255, 0.7)",
-                      },
-                      "& .MuiInputLabel-root.Mui-focused": {
-                        color: "#ffffff",
-                      },
-                    }}
-                  />
-                  <TextField
-                    variant="outlined"
-                    value={editDesc}
-                    onChange={(e) => setEditDesc(e.target.value)}
-                    sx={{
-                      width: "200px",
-                      backgroundColor: "rgba(255, 255, 255, 0.15)",
-                      borderRadius: "8px",
-                      "& .MuiOutlinedInput-root": {
-                        color: "white",
-                        "& fieldset": {
-                          borderColor: "rgba(255, 255, 255, 0.4)",
-                        },
-                        "&:hover fieldset": {
-                          borderColor: "rgba(255, 255, 255, 0.7)",
-                        },
-                        "&.Mui-focused fieldset": {
-                          borderColor: "#ffffff",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        color: "rgba(255, 255, 255, 0.7)",
-                      },
-                      "& .MuiInputLabel-root.Mui-focused": {
-                        color: "#ffffff",
-                      },
-                    }}
-                  />
-                  <div className={styles.buttonRow}>
-                    <IconButton
-                      onClick={handleSaveEdit}
-                      sx={{ color: "white" }}
-                      title="Save"
-                    >
-                      <Save />
-                    </IconButton>
-                    <IconButton
-                      onClick={cancelEdit}
-                      sx={{ color: "white" }}
-                      title="Cancel"
-                    >
-                      <XCircle />
-                    </IconButton>
+          {tasks.map((task) => {
+            const isEditing = editTaskId === task.id;
+            return (
+              <div key={task.id} className={styles.taskItem}>
+                {isEditing ? (
+                  /* -------------------- */
+                  /*    EDITING  MODE    */
+                  /* -------------------- */
+                  <div className={styles.inlineForm}>
+                    <TextField
+                      label="Name"
+                      variant="outlined"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      sx={{ ...textFieldStyle, marginBottom: "0.5rem" }}
+                    />
+                    <TextField
+                      label="Description (Optional)"
+                      variant="outlined"
+                      value={editDescription}
+                      onChange={(e) => setEditDescription(e.target.value)}
+                      sx={{ ...textFieldStyle, marginBottom: "0.5rem" }}
+                    />
+                    {/* Category */}
+                    <FormControl variant="outlined" sx={{ ...formControlStyle, marginBottom: "0.5rem" }}>
+                      <InputLabel>Category</InputLabel>
+                      <Select
+                        value={editCategory}
+                        onChange={(e) => setEditCategory(e.target.value as string)}
+                        label="Category"
+                        style={{ backgroundColor: "transparent" }}
+                      >
+                        <MenuItem value="General">General</MenuItem>
+                        <MenuItem value="Work">Work</MenuItem>
+                        <MenuItem value="Hobby">Hobby</MenuItem>
+                        <MenuItem value="Exercise">Exercise</MenuItem>
+                      </Select>
+                    </FormControl>
+                    {/* Mode */}
+                    <FormControl variant="outlined" sx={{ ...formControlStyle, marginBottom: "0.5rem" }}>
+                      <InputLabel>Mode</InputLabel>
+                      <Select
+                        value={editMode}
+                        onChange={(e) =>
+                          setEditMode(e.target.value as "Timer" | "Stopwatch")
+                        }
+                        label="Mode"
+                        style={{ backgroundColor: "transparent" }}
+                      >
+                        <MenuItem value="Timer">Timer</MenuItem>
+                        <MenuItem value="Stopwatch">Stopwatch</MenuItem>
+                      </Select>
+                    </FormControl>
+                    {/* Priority */}
+                    <FormControl variant="outlined" sx={{ ...formControlStyle, marginBottom: "0.5rem" }}>
+                      <InputLabel>Priority</InputLabel>
+                      <Select
+                        value={editPriority}
+                        onChange={(e) =>
+                          setEditPriority(
+                            e.target.value as "High" | "Medium" | "Low"
+                          )
+                        }
+                        label="Priority"
+                        style={{ backgroundColor: "transparent" }}
+                      >
+                        <MenuItem value="High">High</MenuItem>
+                        <MenuItem value="Medium">Medium</MenuItem>
+                        <MenuItem value="Low">Low</MenuItem>
+                      </Select>
+                    </FormControl>
+                    {/* Study Time if Timer */}
+                    {editMode === "Timer" && (
+                      <TextField
+                        label="Study Time (minutes)"
+                        type="number"
+                        variant="outlined"
+                        value={editStudyTime}
+                        onChange={(e) => setEditStudyTime(parseInt(e.target.value, 10))}
+                        inputProps={{ min: 1 }}
+                        sx={{ ...textFieldStyle, marginBottom: "0.5rem" }}
+                      />
+                    )}
+                    <div className={styles.buttonRow}>
+                      <IconButton onClick={handleSaveEdit} sx={{ color: "white" }} title="Save">
+                        <Save />
+                      </IconButton>
+                      <IconButton onClick={cancelEdit} sx={{ color: "white" }} title="Cancel">
+                        <XCircle />
+                      </IconButton>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                /* --- VIEW MODE --- */
-                <>
-                  <div style={{ textAlign: "left" }}>
-                    <Typography
-                      variant="subtitle1"
-                      sx={{ fontWeight: "bold", color: "white" }}
-                    >
-                      {task.name}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: "white" }}>
-                      {task.description}
-                    </Typography>
-                  </div>
-                  <div>
-                    <IconButton
-                      onClick={() => handleStartEdit(task)}
-                      sx={{ color: "white" }}
-                      title="Edit"
-                    >
-                      <Edit />
-                    </IconButton>
-                    <IconButton
-                      onClick={() => handleDeleteTask(task.id)}
-                      sx={{ color: "white" }}
-                      title="Delete"
-                    >
-                      <Trash2 />
-                    </IconButton>
-                  </div>
-                </>
-              )}
-            </div>
-          ))}
+                ) : (
+                  /* -------------------- */
+                  /*     VIEW  MODE      */
+                  /* -------------------- */
+                  <>
+                    <div style={{ textAlign: "left", marginRight: "1rem" }}>
+                      <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "white" }}>
+                        {task.name}
+                      </Typography>
+                      {/* Optional description */}
+                      {task.description && (
+                        <Typography variant="body2" sx={{ color: "white" }}>
+                          {task.description}
+                        </Typography>
+                      )}
+                      {/* Category, Mode, Priority, StudyTime */}
+                      <Typography variant="body2" sx={{ color: "white" }}>
+                        Category: {task.category}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: "white" }}>
+                        Mode: {task.mode}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: "white" }}>
+                        Priority: {task.priority}
+                      </Typography>
+                      {task.mode === "Timer" && task.studyTime && (
+                        <Typography variant="body2" sx={{ color: "white" }}>
+                          Study Time: {task.studyTime} minutes
+                        </Typography>
+                      )}
+                    </div>
+                    <div>
+                      <IconButton
+                        onClick={() => handleStartEdit(task)}
+                        sx={{ color: "white" }}
+                        title="Edit"
+                      >
+                        <Edit />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => handleDeleteTask(task.id)}
+                        sx={{ color: "white" }}
+                        title="Delete"
+                      >
+                        <Trash2 />
+                      </IconButton>
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+          })}
 
-          {/* Example: A button to go back home if you want */}
+          {/* Back to Home Button */}
           <Button
             variant="outlined"
             sx={{ marginTop: "1rem", color: "white", borderColor: "white" }}
-            onClick={() => router.push("/")} // or your home route
+            onClick={() => router.push("/")}
           >
             Back to Home
           </Button>
@@ -314,6 +442,55 @@ const ManageTasksPage: React.FC = () => {
       </Container>
     </div>
   );
+};
+
+/** Common style overrides for MUI TextField to match the glass theme. */
+const textFieldStyle = {
+  backgroundColor: "rgba(255, 255, 255, 0.15)",
+  borderRadius: "8px",
+  "& .MuiOutlinedInput-root": {
+    color: "white",
+    "& fieldset": {
+      borderColor: "rgba(255, 255, 255, 0.4)",
+    },
+    "&:hover fieldset": {
+      borderColor: "rgba(255, 255, 255, 0.7)",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#ffffff",
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "rgba(255, 255, 255, 0.7)",
+  },
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: "#ffffff",
+  },
+};
+
+/** Common style overrides for MUI FormControl + Select. */
+const formControlStyle = {
+  minWidth: 150,
+  backgroundColor: "rgba(255, 255, 255, 0.15)",
+  borderRadius: "8px",
+  "& .MuiOutlinedInput-root": {
+    color: "white",
+    "& fieldset": {
+      borderColor: "rgba(255, 255, 255, 0.4)",
+    },
+    "&:hover fieldset": {
+      borderColor: "rgba(255, 255, 255, 0.7)",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#ffffff",
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "rgba(255, 255, 255, 0.7)",
+  },
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: "#ffffff",
+  },
 };
 
 export default ManageTasksPage;
