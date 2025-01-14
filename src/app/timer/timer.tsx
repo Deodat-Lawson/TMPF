@@ -421,26 +421,40 @@ const TimerAndStopwatchPage: React.FC = () => {
 
           {/* User Preferences for Timer (if Timer mode is selected) */}
           {isTimerMode && (
-            <div
-              style={{
-                display: "flex",
-                gap: "1rem",
-                justifyContent: "center",
-                marginBottom: "2rem",
-                flexWrap: "wrap",
-              }}
-            >
+            <>
               <TextField
                 label="Work (minutes)"
                 type="number"
                 variant="outlined"
                 value={workDuration}
-                onChange={(e) => setWorkDuration(parseInt(e.target.value, 10))}
+                onChange={(e) =>
+                  setWorkDuration(parseInt(e.target.value, 10))
+                }
                 inputProps={{ min: 1 }}
                 sx={{
-                  maxWidth: "120px",
-                  "& .MuiInputBase-root": {
-                    backgroundColor: "white",
+                  maxWidth: "130px",
+                  // Override default MUI styles for glass look
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                    color: "white",
+                    "& fieldset": {
+                      borderColor: "rgba(255, 255, 255, 0.4)",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "rgba(255, 255, 255, 0.7)",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#ffffff",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "rgba(255, 255, 255, 0.7)",
+                  },
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "#ffffff",
+                  },
+                  input: {
+                    color: "white",
                   },
                 }}
               />
@@ -450,34 +464,96 @@ const TimerAndStopwatchPage: React.FC = () => {
                 type="number"
                 variant="outlined"
                 value={breakDuration}
-                onChange={(e) => setBreakDuration(parseInt(e.target.value, 10))}
+                onChange={(e) =>
+                  setBreakDuration(parseInt(e.target.value, 10))
+                }
                 inputProps={{ min: 1 }}
                 sx={{
-                  maxWidth: "120px",
-                  "& .MuiInputBase-root": {
-                    backgroundColor: "white",
+                  maxWidth: "130px",
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                    color: "white",
+                    "& fieldset": {
+                      borderColor: "rgba(255, 255, 255, 0.4)",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "rgba(255, 255, 255, 0.7)",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#ffffff",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "rgba(255, 255, 255, 0.7)",
+                  },
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "#ffffff",
+                  },
+                  input: {
+                    color: "white",
                   },
                 }}
               />
-
-              <FormControl
-                variant="outlined"
-                sx={{ minWidth: 150, backgroundColor: "white" }}
-              >
-                <InputLabel>Category</InputLabel>
-                <Select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value as string)}
-                  label="Category"
-                >
-                  <MenuItem value="Default Category">Default Category</MenuItem>
-                  <MenuItem value="Coding">Coding</MenuItem>
-                  <MenuItem value="Reading">Reading</MenuItem>
-                  <MenuItem value="Exercise">Exercise</MenuItem>
-                </Select>
-              </FormControl>
-            </div>
+            </>
           )}
+
+          {/* Category is now visible in both modes */}
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "1rem",
+              justifyContent: "center",
+              marginBottom: "2rem",
+
+              // Glassy container for the fields
+              backgroundColor: "rgba(255, 255, 255, 0.15)",
+              backdropFilter: "blur(10px)",
+              padding: "1rem",
+              borderRadius: "12px",
+            }}
+          >
+            <FormControl
+              variant="outlined"
+              sx={{
+                minWidth: 150,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                  color: "white",
+                  "& fieldset": {
+                    borderColor: "rgba(255, 255, 255, 0.4)",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "rgba(255, 255, 255, 0.7)",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#ffffff",
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: "rgba(255, 255, 255, 0.7)",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#ffffff",
+                },
+              }}
+            >
+              <InputLabel>Category</InputLabel>
+              <Select
+                value={category}
+                onChange={(e) => setCategory(e.target.value as string)}
+                label="Category"
+                style={{
+                  backgroundColor: "transparent",
+                }}
+              >
+                <MenuItem value="Default Category">Default Category</MenuItem>
+                <MenuItem value="Coding">Coding</MenuItem>
+                <MenuItem value="Reading">Reading</MenuItem>
+                <MenuItem value="Exercise">Exercise</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
         </div>
       </Container>
     </div>
