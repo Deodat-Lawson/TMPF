@@ -48,6 +48,7 @@ export const tasks = createTable("tasks", {
   timeRemaining: integer("time_remaining").notNull(),
   mode: varchar("mode", { length: 256 }).notNull(),
   category: varchar("category", { length: 256 }).notNull(),
+  priority: integer("priority").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

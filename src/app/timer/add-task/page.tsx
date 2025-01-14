@@ -8,6 +8,9 @@ import {
   CheckCircle,
   Trash2,
 } from "lucide-react";
+
+import {useAuth} from "@clerk/nextjs";
+
 import styles from "../../../styles/Timer/TaskManagement.module.css";
 
 interface Task {
@@ -19,8 +22,14 @@ interface Task {
 }
 
 const TaskManagement = () => {
+
+
+
+
+
   const [tasks, setTasks] = useState<Task[]>([]);
   const [showForm, setShowForm] = useState(false);
+
   const [newTask, setNewTask] = useState({
     title: "",
     dueDate: "",
