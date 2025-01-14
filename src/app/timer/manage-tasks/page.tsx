@@ -6,32 +6,20 @@ import { useRouter } from "next/navigation";
 import {
   Container,
   Typography,
-  TextField,
-  Button,
   IconButton,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  DialogContentText,
-  PaperProps,
+  Button,
 } from "@mui/material";
 import { Edit, Trash2 } from "lucide-react";
-import styles from "../../../styles/Timer/TaskManagement.module.css";
+
+import styles from "../../../styles/Timer/TimerHome.module.css";
+import AddTaskForm from "./AddTaskForm";
+import {
+  EditTaskDialog,
+  DeleteConfirmationDialog,
+} from "./EditAndDeleteDialogs";
 
 /**
- * Each Task has:
- * - id
- * - name (required)
- * - description (optional)
- * - category (string)
- * - mode ("Timer" | "Stopwatch")
- * - priority ("High" | "Medium" | "Low")
- * - studyTime (number, only relevant if mode === 'Timer')
+ * Data model for each Task
  */
 interface Task {
   id: number;
@@ -40,67 +28,8 @@ interface Task {
   category: string;
   mode: "Timer" | "Stopwatch";
   priority: "High" | "Medium" | "Low";
-  studyTime?: number;
+  studyTime?: number; // if mode === "Timer"
 }
-
-/** Common style overrides for MUI TextFields to match glassy theme. */
-const textFieldStyle = {
-  backgroundColor: "rgba(255, 255, 255, 0.15)",
-  borderRadius: "8px",
-  "& .MuiOutlinedInput-root": {
-    color: "white",
-    "& fieldset": {
-      borderColor: "rgba(255, 255, 255, 0.4)",
-    },
-    "&:hover fieldset": {
-      borderColor: "rgba(255, 255, 255, 0.7)",
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: "#ffffff",
-    },
-  },
-  "& .MuiInputLabel-root": {
-    color: "rgba(255, 255, 255, 0.7)",
-  },
-  "& .MuiInputLabel-root.Mui-focused": {
-    color: "#ffffff",
-  },
-};
-
-/** Common style overrides for MUI FormControl+Select. */
-const formControlStyle = {
-  minWidth: 150,
-  backgroundColor: "rgba(255, 255, 255, 0.15)",
-  borderRadius: "8px",
-  "& .MuiOutlinedInput-root": {
-    color: "white",
-    "& fieldset": {
-      borderColor: "rgba(255, 255, 255, 0.4)",
-    },
-    "&:hover fieldset": {
-      borderColor: "rgba(255, 255, 255, 0.7)",
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: "#ffffff",
-    },
-  },
-  "& .MuiInputLabel-root": {
-    color: "rgba(255, 255, 255, 0.7)",
-  },
-  "& .MuiInputLabel-root.Mui-focused": {
-    color: "#ffffff",
-  },
-};
-
-/** Style for the Dialog's 'paper' to create a glassy backdrop. */
-const dialogPaperStyle: PaperProps = {
-  sx: {
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
-    backdropFilter: "blur(12px)",
-    borderRadius: "16px",
-    color: "white",
-  },
-};
 
 const ManageTasksPage: React.FC = () => {
   const { user } = useUser();
@@ -113,7 +42,7 @@ const ManageTasksPage: React.FC = () => {
     {
       id: 1,
       name: "Review Project Requirements",
-      description: "Check if all acceptance criteria are met.",
+      description: "Check acceptance criteria",
       category: "Work",
       mode: "Timer",
       priority: "High",
@@ -135,10 +64,8 @@ const ManageTasksPage: React.FC = () => {
   const [newDescription, setNewDescription] = useState("");
   const [newCategory, setNewCategory] = useState("General");
   const [newMode, setNewMode] = useState<"Timer" | "Stopwatch">("Timer");
-  const [newPriority, setNewPriority] = useState<"High" | "Medium" | "Low">(
-    "Medium"
-  );
-  const [newStudyTime, setNewStudyTime] = useState<number>(30);
+  const [newPriority, setNewPriority] = useState<"High" | "Medium" | "Low">("Medium");
+  const [newStudyTime, setNewStudyTime] = useState(30);
 
   const handleCreateTask = () => {
     if (!newName.trim()) return;
@@ -153,7 +80,7 @@ const ManageTasksPage: React.FC = () => {
     };
     setTasks((prev) => [...prev, newTask]);
 
-    // Reset the form
+    // Reset form
     setNewName("");
     setNewDescription("");
     setNewCategory("General");
@@ -167,14 +94,13 @@ const ManageTasksPage: React.FC = () => {
   // -------------------------------------
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editTaskId, setEditTaskId] = useState<number | null>(null);
+
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [editCategory, setEditCategory] = useState("General");
   const [editMode, setEditMode] = useState<"Timer" | "Stopwatch">("Timer");
-  const [editPriority, setEditPriority] = useState<"High" | "Medium" | "Low">(
-    "Medium"
-  );
-  const [editStudyTime, setEditStudyTime] = useState<number>(30);
+  const [editPriority, setEditPriority] = useState<"High" | "Medium" | "Low">("Medium");
+  const [editStudyTime, setEditStudyTime] = useState(30);
 
   const openEditModal = (task: Task) => {
     setEditTaskId(task.id);
@@ -189,7 +115,7 @@ const ManageTasksPage: React.FC = () => {
 
   const closeEditModal = () => {
     setIsEditModalOpen(false);
-    // Reset edit fields
+    // reset
     setEditTaskId(null);
     setEditName("");
     setEditDescription("");
@@ -201,20 +127,20 @@ const ManageTasksPage: React.FC = () => {
 
   const handleSaveEdit = () => {
     if (!editName.trim() || editTaskId === null) return;
-
     setTasks((prev) =>
-      prev.map((t) => {
-        if (t.id !== editTaskId) return t;
-        return {
-          ...t,
-          name: editName,
-          description: editDescription.trim() || undefined,
-          category: editCategory,
-          mode: editMode,
-          priority: editPriority,
-          studyTime: editMode === "Timer" ? editStudyTime : undefined,
-        };
-      })
+      prev.map((t) =>
+        t.id === editTaskId
+          ? {
+            ...t,
+            name: editName,
+            description: editDescription.trim() || undefined,
+            category: editCategory,
+            mode: editMode,
+            priority: editPriority,
+            studyTime: editMode === "Timer" ? editStudyTime : undefined,
+          }
+          : t
+      )
     );
     closeEditModal();
   };
@@ -229,12 +155,10 @@ const ManageTasksPage: React.FC = () => {
     setTaskToDelete(task);
     setIsDeleteDialogOpen(true);
   };
-
   const closeDeleteDialog = () => {
-    setIsDeleteDialogOpen(false);
     setTaskToDelete(null);
+    setIsDeleteDialogOpen(false);
   };
-
   const handleConfirmDelete = () => {
     if (taskToDelete) {
       setTasks((prev) => prev.filter((t) => t.id !== taskToDelete.id));
@@ -247,7 +171,7 @@ const ManageTasksPage: React.FC = () => {
   // -------------------------------------
   return (
     <div className={styles.pageContainer}>
-      {/* Animated background */}
+      {/* Rotating background */}
       {[...Array(5)].map((_, i) => (
         <div
           key={i}
@@ -261,94 +185,32 @@ const ManageTasksPage: React.FC = () => {
       ))}
 
       <Container className={styles.mainContainer}>
-        <Typography className={styles.pageTitle}>Manage Tasks</Typography>
+        <Typography style={{
+          fontSize: "2rem",
+          marginBottom: "1rem",
+          color: "white"
+        }}>Manage Tasks</Typography>
         <Typography variant="body1" sx={{ fontSize: "1.2rem", marginBottom: "1rem" }}>
           Hello, {user?.username || "Guest"}! Create or update your tasks below:
         </Typography>
 
         <div className={styles.glassContainer}>
-          {/* CREATE NEW TASK FORM */}
-          <div className={styles.taskForm}>
-            <TextField
-              label="Name"
-              variant="outlined"
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              sx={textFieldStyle}
-            />
-            <TextField
-              label="Description (Optional)"
-              variant="outlined"
-              value={newDescription}
-              onChange={(e) => setNewDescription(e.target.value)}
-              sx={textFieldStyle}
-            />
-            <FormControl variant="outlined" sx={formControlStyle}>
-              <InputLabel>Category</InputLabel>
-              <Select
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value as string)}
-                label="Category"
-                style={{ backgroundColor: "transparent" }}
-              >
-                <MenuItem value="General">General</MenuItem>
-                <MenuItem value="Work">Work</MenuItem>
-                <MenuItem value="Hobby">Hobby</MenuItem>
-                <MenuItem value="Exercise">Exercise</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl variant="outlined" sx={formControlStyle}>
-              <InputLabel>Mode</InputLabel>
-              <Select
-                value={newMode}
-                onChange={(e) =>
-                  setNewMode(e.target.value as "Timer" | "Stopwatch")
-                }
-                label="Mode"
-                style={{ backgroundColor: "transparent" }}
-              >
-                <MenuItem value="Timer">Timer</MenuItem>
-                <MenuItem value="Stopwatch">Stopwatch</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl variant="outlined" sx={formControlStyle}>
-              <InputLabel>Priority</InputLabel>
-              <Select
-                value={newPriority}
-                onChange={(e) =>
-                  setNewPriority(e.target.value as "High" | "Medium" | "Low")
-                }
-                label="Priority"
-                style={{ backgroundColor: "transparent" }}
-              >
-                <MenuItem value="High">High</MenuItem>
-                <MenuItem value="Medium">Medium</MenuItem>
-                <MenuItem value="Low">Low</MenuItem>
-              </Select>
-            </FormControl>
-            {newMode === "Timer" && (
-              <TextField
-                label="Study Time (minutes)"
-                type="number"
-                variant="outlined"
-                value={newStudyTime}
-                onChange={(e) => setNewStudyTime(parseInt(e.target.value, 10))}
-                inputProps={{ min: 1 }}
-                sx={textFieldStyle}
-              />
-            )}
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "white",
-                color: "#2563eb",
-                "&:hover": { backgroundColor: "#f2f2f2" },
-              }}
-              onClick={handleCreateTask}
-            >
-              Add Task
-            </Button>
-          </div>
+          {/* AddTaskForm: for creating tasks */}
+          <AddTaskForm
+            newName={newName}
+            setNewName={setNewName}
+            newDescription={newDescription}
+            setNewDescription={setNewDescription}
+            newCategory={newCategory}
+            setNewCategory={setNewCategory}
+            newMode={newMode}
+            setNewMode={setNewMode}
+            newPriority={newPriority}
+            setNewPriority={setNewPriority}
+            newStudyTime={newStudyTime}
+            setNewStudyTime={setNewStudyTime}
+            handleCreateTask={handleCreateTask}
+          />
 
           {/* TASK LIST */}
           {tasks.map((task) => (
@@ -396,7 +258,7 @@ const ManageTasksPage: React.FC = () => {
             </div>
           ))}
 
-          {/* Back to Home button */}
+          {/* Back to Home */}
           <Button
             variant="outlined"
             sx={{ marginTop: "1rem", color: "white", borderColor: "white" }}
@@ -407,173 +269,31 @@ const ManageTasksPage: React.FC = () => {
         </div>
       </Container>
 
-      {/* EDIT TASK MODAL - Glass-themed */}
-      <Dialog
+      {/* EDIT TASK MODAL */}
+      <EditTaskDialog
         open={isEditModalOpen}
         onClose={closeEditModal}
-        maxWidth="sm"
-        fullWidth
-        PaperProps={dialogPaperStyle}
-      >
-        <DialogTitle
-          sx={{
-            backgroundColor: "rgba(255, 255, 255, 0.1)",
-            backdropFilter: "blur(10px)",
-            color: "white",
-          }}
-        >
-          Edit Task
-        </DialogTitle>
-
-        <DialogContent
-          sx={{
-            backgroundColor: "rgba(255, 255, 255, 0.05)",
-            backdropFilter: "blur(10px)",
-          }}
-        >
-          <TextField
-            label="Name"
-            variant="outlined"
-            fullWidth
-            value={editName}
-            onChange={(e) => setEditName(e.target.value)}
-            sx={{ ...textFieldStyle, marginBottom: "1rem" }}
-          />
-          <TextField
-            label="Description (Optional)"
-            variant="outlined"
-            fullWidth
-            value={editDescription}
-            onChange={(e) => setEditDescription(e.target.value)}
-            sx={{ ...textFieldStyle, marginBottom: "1rem" }}
-          />
-          <FormControl
-            variant="outlined"
-            sx={{ ...formControlStyle, marginBottom: "1rem" }}
-            fullWidth
-          >
-            <InputLabel>Category</InputLabel>
-            <Select
-              value={editCategory}
-              onChange={(e) => setEditCategory(e.target.value as string)}
-              label="Category"
-              style={{ backgroundColor: "transparent" }}
-            >
-              <MenuItem value="General">General</MenuItem>
-              <MenuItem value="Work">Work</MenuItem>
-              <MenuItem value="Hobby">Hobby</MenuItem>
-              <MenuItem value="Exercise">Exercise</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl
-            variant="outlined"
-            sx={{ ...formControlStyle, marginBottom: "1rem" }}
-            fullWidth
-          >
-            <InputLabel>Mode</InputLabel>
-            <Select
-              value={editMode}
-              onChange={(e) => setEditMode(e.target.value as "Timer" | "Stopwatch")}
-              label="Mode"
-              style={{ backgroundColor: "transparent" }}
-            >
-              <MenuItem value="Timer">Timer</MenuItem>
-              <MenuItem value="Stopwatch">Stopwatch</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl
-            variant="outlined"
-            sx={{ ...formControlStyle, marginBottom: "1rem" }}
-            fullWidth
-          >
-            <InputLabel>Priority</InputLabel>
-            <Select
-              value={editPriority}
-              onChange={(e) =>
-                setEditPriority(e.target.value as "High" | "Medium" | "Low")
-              }
-              label="Priority"
-              style={{ backgroundColor: "transparent" }}
-            >
-              <MenuItem value="High">High</MenuItem>
-              <MenuItem value="Medium">Medium</MenuItem>
-              <MenuItem value="Low">Low</MenuItem>
-            </Select>
-          </FormControl>
-          {editMode === "Timer" && (
-            <TextField
-              label="Study Time (minutes)"
-              type="number"
-              variant="outlined"
-              fullWidth
-              value={editStudyTime}
-              onChange={(e) => setEditStudyTime(parseInt(e.target.value, 10))}
-              inputProps={{ min: 1 }}
-              sx={textFieldStyle}
-            />
-          )}
-        </DialogContent>
-
-        <DialogActions
-          sx={{
-            backgroundColor: "rgba(255, 255, 255, 0.1)",
-            backdropFilter: "blur(10px)",
-          }}
-        >
-          <Button onClick={closeEditModal} sx={{ color: "white" }}>
-            Cancel
-          </Button>
-          <Button
-            onClick={handleSaveEdit}
-            variant="contained"
-            sx={{ backgroundColor: "white", color: "#2563eb" }}
-          >
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onSave={handleSaveEdit}
+        editName={editName}
+        setEditName={setEditName}
+        editDescription={editDescription}
+        setEditDescription={setEditDescription}
+        editCategory={editCategory}
+        setEditCategory={setEditCategory}
+        editMode={editMode}
+        setEditMode={setEditMode}
+        editPriority={editPriority}
+        setEditPriority={setEditPriority}
+        editStudyTime={editStudyTime}
+        setEditStudyTime={setEditStudyTime}
+      />
 
       {/* DELETE CONFIRMATION DIALOG */}
-      <Dialog
+      <DeleteConfirmationDialog
         open={isDeleteDialogOpen}
         onClose={closeDeleteDialog}
-        maxWidth="xs"
-        fullWidth
-        PaperProps={dialogPaperStyle}
-      >
-        <DialogTitle
-          sx={{
-            backgroundColor: "rgba(255, 255, 255, 0.1)",
-            backdropFilter: "blur(10px)",
-            color: "white",
-          }}
-        >
-          Confirm Deletion
-        </DialogTitle>
-        <DialogContent
-          sx={{
-            backgroundColor: "rgba(255, 255, 255, 0.05)",
-            backdropFilter: "blur(10px)",
-          }}
-        >
-          <DialogContentText sx={{ color: "white" }}>
-            Are you sure you want to delete this task?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions
-          sx={{
-            backgroundColor: "rgba(255, 255, 255, 0.1)",
-            backdropFilter: "blur(10px)",
-          }}
-        >
-          <Button onClick={closeDeleteDialog} sx={{ color: "white" }}>
-            Cancel
-          </Button>
-          <Button onClick={handleConfirmDelete} color="error" variant="contained">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onConfirmDelete={handleConfirmDelete}
+      />
     </div>
   );
 };
