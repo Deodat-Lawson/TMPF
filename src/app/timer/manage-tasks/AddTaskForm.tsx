@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
   TextField,
   Button,
@@ -9,6 +9,7 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
+
 
 interface AddTaskFormProps {
   newName: string;
@@ -25,6 +26,7 @@ interface AddTaskFormProps {
   setNewStudyTime: (val: number) => void;
   handleCreateTask: () => void;
 }
+
 
 // Common styles from your theme
 const textFieldStyle = {
@@ -73,6 +75,7 @@ const formControlStyle = {
     color: "#ffffff",
   },
 };
+
 
 const AddTaskForm: React.FC<AddTaskFormProps> = ({
                                                    newName,

@@ -40,8 +40,8 @@ export const users = createTable(
 export const tasks = createTable("tasks", {
   id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
 
-  // Foreign key referencing persons.id
-  userId: integer("user_id").notNull().references(users.id),
+  // Foreign key referencing persons.id,
+  userId: integer("user_id").notNull().references(() => users.id),
 
   name: varchar("name", { length: 256 }).notNull(),
   description: varchar("description", { length: 256 }),

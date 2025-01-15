@@ -28,6 +28,8 @@ export async function POST(request: Request) {
     } = (await request.json()) as PostBody;
 
     // Look up the user to get the user's internal DB `id`
+
+
     const [userInfo] = await db
       .select()
       .from(users)

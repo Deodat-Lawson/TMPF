@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { useUser } from "@clerk/nextjs";
+import React, { useEffect, useState } from "react";
+import { useUser, useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import {
   Container,
@@ -32,30 +32,43 @@ interface Task {
 }
 
 const ManageTasksPage: React.FC = () => {
+  const { userId } = useAuth();
   const { user } = useUser();
   const router = useRouter();
 
   // -------------------------------------
   //   TASKS STATE
   // -------------------------------------
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: 1,
-      name: "Review Project Requirements",
-      description: "Check acceptance criteria",
-      category: "Work",
-      mode: "Timer",
-      priority: "High",
-      studyTime: 60,
-    },
-    {
-      id: 2,
-      name: "Practice Guitar",
-      category: "Hobby",
-      mode: "Stopwatch",
-      priority: "Medium",
-    },
-  ]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  // get tasks from database
+  useEffect(() => {
+    if(!userId) return;
+    const fetchTasks = async () => {
+      try{
+        const response = await fetch("/api/timer/fetchUserTasks", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId }),
+        });
+
+        if(!response.ok){
+          throw new Error("Failed to fetch tasks");
+        }
+
+        const data: Task[] = (await response.json()) as Task[];
+        setTasks(data);
+
+      } catch (error){
+        console.error("Error fetching tasks", error);
+      }
+
+    }
+
+    fetchTasks().catch((error) => console.error(error));
+
+  }, [userId]); //unsure what to put here
+
 
   // -------------------------------------
   //   CREATE NEW TASK
@@ -67,26 +80,51 @@ const ManageTasksPage: React.FC = () => {
   const [newPriority, setNewPriority] = useState<"High" | "Medium" | "Low">("Medium");
   const [newStudyTime, setNewStudyTime] = useState(30);
 
-  const handleCreateTask = () => {
-    if (!newName.trim()) return;
-    const newTask: Task = {
-      id: Date.now(),
-      name: newName,
-      description: newDescription.trim() || undefined,
-      category: newCategory,
-      mode: newMode,
-      priority: newPriority,
-      ...(newMode === "Timer" && { studyTime: newStudyTime }),
-    };
-    setTasks((prev) => [...prev, newTask]);
+  const handleCreateTask = async () => {
+    try {
+      if (!newName.trim()) return;
+      const response = await fetch("/api/timer/addUserTasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: userId,
+          name: newName,
+          description: newDescription,
+          category: newCategory,
+          mode: newMode,
+          priority: newPriority,
+          studyTime: newMode === "Timer" ? newStudyTime : null,
+        }),
+      });
 
-    // Reset form
-    setNewName("");
-    setNewDescription("");
-    setNewCategory("General");
-    setNewMode("Timer");
-    setNewPriority("Medium");
-    setNewStudyTime(30);
+      if (!response.ok) {
+        throw new Error("Failed to create task");
+      }
+
+
+      const newTask: Task = {
+        id: Date.now(),
+        name: newName,
+        description: newDescription.trim() || undefined,
+        category: newCategory,
+        mode: newMode,
+        priority: newPriority,
+        ...(newMode === "Timer" && { studyTime: newStudyTime }),
+      };
+      setTasks((prev) => [...prev, newTask]);
+
+      // Reset form
+      setNewName("");
+      setNewDescription("");
+      setNewCategory("General");
+      setNewMode("Timer");
+      setNewPriority("Medium");
+      setNewStudyTime(30);
+
+
+    } catch (error) {
+      console.error("Error creating task", error);
+    }
   };
 
   // -------------------------------------

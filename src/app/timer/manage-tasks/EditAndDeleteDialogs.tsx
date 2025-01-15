@@ -109,22 +109,22 @@ interface EditTaskDialogProps {
 }
 
 export const EditTaskDialog: React.FC<EditTaskDialogProps> = ({
-                                                                open,
-                                                                onClose,
-                                                                onSave,
-                                                                editName,
-                                                                setEditName,
-                                                                editDescription,
-                                                                setEditDescription,
-                                                                editCategory,
-                                                                setEditCategory,
-                                                                editMode,
-                                                                setEditMode,
-                                                                editPriority,
-                                                                setEditPriority,
-                                                                editStudyTime,
-                                                                setEditStudyTime,
-                                                              }) => {
+  open,
+  onClose,
+  onSave,
+  editName,
+  setEditName,
+  editDescription,
+  setEditDescription,
+  editCategory,
+  setEditCategory,
+  editMode,
+  setEditMode,
+  editPriority,
+  setEditPriority,
+  editStudyTime,
+  setEditStudyTime,
+}) => {
   return (
     <Dialog
       open={open}
@@ -265,11 +265,9 @@ interface DeleteConfirmationDialogProps {
   onConfirmDelete: () => void;
 }
 
-export const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
-                                                                                    open,
-                                                                                    onClose,
-                                                                                    onConfirmDelete,
-                                                                                  }) => {
+export const DeleteConfirmationDialog: React.FC<
+  DeleteConfirmationDialogProps
+> = ({ open, onClose, onConfirmDelete }) => {
   return (
     <Dialog
       open={open}

@@ -67,6 +67,7 @@ const StatisticsPage: React.FC = () => {
       { category: "Exercise", color: "#A5B4FC" },
       { category: "Other", color: "#BFDBFE" },
     ];
+
     const generated = sampleCategories.map((cat) => ({
       ...cat,
       timeSpent: Math.floor(Math.random() * 240),
@@ -109,7 +110,7 @@ const StatisticsPage: React.FC = () => {
   // -------------------------------------------
   //   Chart configs
   // -------------------------------------------
-  const chartOptions: ChartOptions = {
+  const pieChartOptions: ChartOptions<'pie'> = {
     scales: {
       x: {
         grid: {
@@ -137,7 +138,35 @@ const StatisticsPage: React.FC = () => {
     },
   };
 
-  const pieChartData: ChartData<"pie"> = {
+  const lineChartOptions: ChartOptions<"line"> = {
+    scales: {
+      x: {
+        grid: {
+          color: "rgba(255, 255, 255, 0.2)",
+        },
+        ticks: {
+          color: "rgba(255, 255, 255, 0.9)",
+        },
+      },
+      y: {
+        grid: {
+          color: "rgba(255, 255, 255, 0.2)",
+        },
+        ticks: {
+          color: "rgba(255, 255, 255, 0.9)",
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: "rgba(255, 255, 255, 0.9)",
+        },
+      },
+    },
+  };
+
+  const pieChartData: ChartData<'pie'> = {
     labels: categoryData.map((c) => c.category),
     datasets: [
       {
@@ -182,17 +211,19 @@ const StatisticsPage: React.FC = () => {
   // -------------------------------------------
   return (
     <div className={styles.pageContainer}>
-      {[...Array(5)].map((_, i) => (
-        <div
-          key={i}
-          className={styles.rotatingDiv}
-          style={{
-            animation: `rotate ${20 + i * 5}s linear infinite`,
-            top: `${-20 + i * 10}%`,
-            left: `${-10 + i * 5}%`,
-          }}
-        />
-      ))}
+      {
+        [...Array(5).keys()].map((i) => (
+          <div
+            key={i}
+            className={styles.rotatingDiv}
+            style={{
+              animation: `rotate ${20 + i * 5}s linear infinite`,
+              top: `${-20 + i * 10}%`,
+              left: `${-10 + i * 5}%`,
+            }}
+          />
+        ))
+      }
 
       <Container className={styles.mainContainer}>
         <div className={styles.glassContainer}>
@@ -260,7 +291,7 @@ const StatisticsPage: React.FC = () => {
               <Typography sx={{ marginBottom: "1rem", fontWeight: "bold" }}>
                 Time Spent by Category
               </Typography>
-              <StatsPieChart data={pieChartData} options={chartOptions} />
+              <StatsPieChart data={pieChartData} options={pieChartOptions} />
 
               <div className={styles.categoryList}>
                 {categoryData.map((cat) => (
@@ -286,7 +317,7 @@ const StatisticsPage: React.FC = () => {
               <Typography sx={{ marginBottom: "1rem", fontWeight: "bold" }}>
                 Total Time (Nearby Intervals)
               </Typography>
-              <StatsLineChart data={lineChartDataObj} options={chartOptions} />
+              <StatsLineChart data={lineChartDataObj} options={lineChartOptions} />
             </div>
           </div>
 

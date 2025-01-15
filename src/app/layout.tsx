@@ -17,7 +17,6 @@ export default function RootLayout({children}: {
 }) {
   return (
     <ClerkProvider>
-
       <html lang="en" className={`${GeistSans.variable}`}>
 
       <body className="min-h-screen flex flex-col">
