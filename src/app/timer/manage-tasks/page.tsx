@@ -165,8 +165,27 @@ const ManageTasksPage: React.FC = () => {
     setEditStudyTime(30);
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (!editName.trim() || editTaskId === null) return;
+
+
+    const response = await fetch("/api/timer/updateUserTasks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+
+      body: JSON.stringify({
+        id: editTaskId,
+        userId: userId,
+        taskName: editName,
+        taskDescription: editDescription.trim() || undefined,
+        taskCategory: editCategory,
+        taskMode: editMode,
+        taskPriority: editPriority,
+        taskTimeRemaining: editStudyTime || -1,
+      }),
+    });
+
+
     setTasks((prev) =>
       prev.map((t) =>
         t.id === editTaskId
