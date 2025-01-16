@@ -81,19 +81,21 @@ const ManageTasksPage: React.FC = () => {
   const [newStudyTime, setNewStudyTime] = useState(30);
 
   const handleCreateTask = async () => {
+    console.log("Creating task...", newStudyTime);
     try {
       if (!newName.trim()) return;
       const response = await fetch("/api/timer/addUserTasks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+
         body: JSON.stringify({
           userId: userId,
-          name: newName,
-          description: newDescription,
-          category: newCategory,
-          mode: newMode,
-          priority: newPriority,
-          studyTime: newMode === "Timer" ? newStudyTime : null,
+          taskName: newName,
+          taskDescription: newDescription,
+          taskCategory: newCategory,
+          taskMode: newMode,
+          taskPriority: newPriority,
+          taskTimeRemaining: newStudyTime || -1,
         }),
       });
 
@@ -143,11 +145,11 @@ const ManageTasksPage: React.FC = () => {
   const openEditModal = (task: Task) => {
     setEditTaskId(task.id);
     setEditName(task.name);
-    setEditDescription(task.description || "");
+    setEditDescription(task.description ?? "");
     setEditCategory(task.category);
     setEditMode(task.mode);
     setEditPriority(task.priority);
-    setEditStudyTime(task.studyTime || 30);
+    setEditStudyTime(task.studyTime ?? 30);
     setIsEditModalOpen(true);
   };
 
@@ -210,7 +212,7 @@ const ManageTasksPage: React.FC = () => {
   return (
     <div className={styles.pageContainer}>
       {/* Rotating background */}
-      {[...Array(5)].map((_, i) => (
+      {[...Array(5).keys()].map((i) => (
         <div
           key={i}
           className={styles.rotatingDiv}
@@ -229,7 +231,7 @@ const ManageTasksPage: React.FC = () => {
           color: "white"
         }}>Manage Tasks</Typography>
         <Typography variant="body1" sx={{ fontSize: "1.2rem", marginBottom: "1rem" }}>
-          Hello, {user?.username || "Guest"}! Create or update your tasks below:
+          Hello, {user?.username}! Create or update your tasks below:
         </Typography>
 
         <div className={styles.glassContainer}>

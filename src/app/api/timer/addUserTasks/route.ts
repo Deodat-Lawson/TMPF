@@ -11,7 +11,8 @@ type PostBody = {
   taskTimeRemaining: number; // if it's an integer
   taskMode: string;
   taskCategory: string;
-  taskPriority: number;      // if it's an integer
+  taskPriority: string; // if it's an integer
+  taskDescription: string;
 };
 
 
@@ -25,7 +26,16 @@ export async function POST(request: Request) {
       taskMode,
       taskCategory,
       taskPriority,
+      taskDescription,
     } = (await request.json()) as PostBody;
+
+    console.log("userId: ", userId);
+    console.log("taskName: ", taskName);
+    console.log("taskTimeRemaining: ", taskTimeRemaining);
+    console.log("taskMode: ", taskMode);
+    console.log("taskCategory: ", taskCategory);
+    console.log("taskPriority: ", taskPriority);
+    console.log("taskDescription: ", taskDescription);
 
     // Look up the user to get the user's internal DB `id`
 
@@ -51,7 +61,8 @@ export async function POST(request: Request) {
       timeRemaining: taskTimeRemaining, // integer
       mode: taskMode,          // string
       category: taskCategory,  // string
-      priority: taskPriority // integer
+      priority: taskPriority, // integer
+      description: taskDescription, // string
     });
 
     // Optionally, return an updated list of tasks (or the inserted task)
@@ -63,7 +74,7 @@ export async function POST(request: Request) {
     // Return the tasks as JSON
     return NextResponse.json(userTasks, { status: 200 });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error creating task:", error);
     return NextResponse.json(
       { error: "Unable to create task" },

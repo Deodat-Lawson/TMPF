@@ -13,7 +13,7 @@ const FeatureUnavailable = () => {
   return (
     <div className={styles["feature-unavailable"]}>
       <div className={styles["animated-bg"]}>
-        {[...Array(5)].map((_, i) => (
+        {[...Array(5).keys()].map(( i) => (
           <div
             key={i}
             className={styles["bg-circle"]}
