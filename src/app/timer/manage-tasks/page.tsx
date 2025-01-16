@@ -169,7 +169,7 @@ const ManageTasksPage: React.FC = () => {
     if (!editName.trim() || editTaskId === null) return;
 
 
-    const response = await fetch("/api/timer/updateUserTasks", {
+    await fetch("/api/timer/updateUserTasks", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
 
@@ -218,7 +218,18 @@ const ManageTasksPage: React.FC = () => {
     setTaskToDelete(null);
     setIsDeleteDialogOpen(false);
   };
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async() => {
+
+    await fetch("/api/timer/deleteUserTasks", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+
+      body: JSON.stringify({
+        id: taskToDelete?.id,
+      }),
+    });
+
+
     if (taskToDelete) {
       setTasks((prev) => prev.filter((t) => t.id !== taskToDelete.id));
     }

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "../../../../server/db/index";
-import { createTable, tasks, users } from "../../../../server/db/schema";
+import { tasks, users } from "../../../../server/db/schema";
 import { eq, sql } from "drizzle-orm";
 import * as console from "console";
 
@@ -64,9 +64,9 @@ export async function POST(request: Request) {
     return NextResponse.json("Update Success", { status: 200 });
 
   } catch (error: unknown) {
-    console.error("Error creating task:", error);
+    console.error("Error updating task:", error);
     return NextResponse.json(
-      { error: "Unable to create task" },
+      { error: "Unable to update task" },
       { status: 500 }
     );
   }
