@@ -82,7 +82,7 @@ export const study_sessions  = createTable("study_sessions", {
 export const study_time_daily = createTable("study_time_daily", {
   id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
   userId: varchar("user_id", { length: 256 }).notNull(),
-  date: date("date").notNull(),
+  date: varchar("date", { length: 256 }).notNull(),
 
   category: varchar("category", { length: 256 }).notNull(),
   totalDuration: integer("total_duration").notNull(),
