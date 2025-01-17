@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useUser, useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Container, Typography, Button, Select, MenuItem, Box } from "@mui/material";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -36,19 +36,42 @@ interface CategoryTime {
   timeSpent: number; // minutes
 }
 
+interface ResponseData {
+  // Match the shape of the JSON you expect
+  categoryTotals: { category: string; totalTime: number }[],
+  totalTimeAll: number,
+}
+
+
+
 const StatisticsPage: React.FC = () => {
   const { user } = useUser();
+  const { userId } = useAuth();
   const router = useRouter();
 
   const [range, setRange] = useState<DateRange>("DAY");
   const [rangeIndex, setRangeIndex] = useState<number>(0);
 
   const [categoryData, setCategoryData] = useState<CategoryTime[]>([]);
-  const [totalTime, setTotalTime] = useState(0);
+  const [totalTime, setTotalTime] = useState<string>('0');
 
   const [lineChartLabels, setLineChartLabels] = useState<string[]>([]);
   const [lineChartData, setLineChartData] = useState<number[]>([]);
   const [rangeString, setRangeString] = useState("");
+
+
+  const colorMap: Record<string, string> = {
+    Work: "#4E9AF1",
+    Hobby: "#7DD3FC",
+    Exercise: "#A5B4FC",
+    Other: "#BFDBFE",
+  };
+
+  function getColorForCategory(cat: string) {
+    // default color if category not found
+    return colorMap[cat] ?? "#cccccc";
+  }
+
 
   // -------------------------------------------
   //   Simulated data fetching
@@ -60,23 +83,51 @@ const StatisticsPage: React.FC = () => {
     const eStr = formatDate(endDate);
     setRangeString(sStr + (sStr !== eStr ? " - " + eStr : ""));
 
+    async function fetchCategoryData() {
+      try {
+        const response = await fetch("/api/timer/fetchTimeStamp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId,
+            startDate: sStr,
+            endDate: eStr,
+          }),
+        });
 
-    // generate random category data
-    const sampleCategories = [
-      { category: "Work", color: "#4E9AF1" },
-      { category: "Hobby", color: "#7DD3FC" },
-      { category: "Exercise", color: "#A5B4FC" },
-      { category: "Other", color: "#BFDBFE" },
-    ];
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
 
-    const generated = sampleCategories.map((cat) => ({
-      ...cat,
-      timeSpent: Math.floor(Math.random() * 240),
-    }));
-    setCategoryData(generated);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const data: ResponseData = await response.json();
 
-    const total = generated.reduce((acc, c) => acc + c.timeSpent, 0);
-    setTotalTime(total);
+        if (!data) {
+          throw new Error("returned data error", data);
+        }
+
+        // data is expected to be { categoryTotals: [ { category, totalTime }, ... ], totalTimeAll: number }
+        const { categoryTotals, totalTimeAll } = data;
+
+        // Convert that data into your UI shape
+        const newCategoryData = categoryTotals.map((c) => ({
+          category: c.category,
+          color: getColorForCategory(c.category),
+          timeSpent: parseFloat((c.totalTime / 60).toFixed(2)),
+        }));
+
+        setCategoryData(newCategoryData);
+        setTotalTime((totalTimeAll/60).toFixed(2));
+      } catch (err) {
+        console.error("Failed to fetch category data:", err);
+        // Optionally handle error UI here
+        setCategoryData([]);
+        setTotalTime('0');
+      }
+    }
+
+    fetchCategoryData().catch((err) => {console.error(err)});
+
 
     // line chart intervals
     const intervals = [-2, -1, 0, 1, 2].map((offset) => {
@@ -107,17 +158,6 @@ const StatisticsPage: React.FC = () => {
     const lineData = intervals.map(() => Math.floor(Math.random() * 500));
     setLineChartData(lineData);
   }, [range, rangeIndex]);
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -267,7 +307,7 @@ const StatisticsPage: React.FC = () => {
             Statistics
           </Typography>
           <Typography sx={{ marginBottom: "2rem" }}>
-            Hello, {user?.username || "Guest"}!
+            Hello, {user?.username ?? "Guest"}!
           </Typography>
 
           <Box sx={{ display: "flex", gap: "1rem", justifyContent: "center", marginBottom: "1.5rem" }}>
