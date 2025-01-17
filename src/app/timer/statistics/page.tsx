@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useUser, useAuth } from "@clerk/nextjs";
+import { useUser, useAuth, SignedOut } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Container, Typography, Button, Select, MenuItem, Box } from "@mui/material";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -22,6 +22,8 @@ import styles from "../../../styles/Timer/Statistics.module.css";
 import { DateRange, getRangeDates, formatDate, addDays, addWeeks, addMonths } from "./StatsDateUtils";
 import StatsPieChart from "./StatsPieChart";
 import StatsLineChart from "./StatsLineChart";
+import {RedirectToSignIn} from "@clerk/nextjs";
+
 
 /** Initialize Chart.js modules */
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement);
@@ -342,7 +344,13 @@ const StatisticsPage: React.FC = () => {
   //   Render
   // -------------------------------------------
   return (
+
+
     <div className={styles.pageContainer}>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
+
       {
         [...Array(5).keys()].map((i) => (
           <div

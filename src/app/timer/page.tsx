@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Container, Button, Typography } from "@mui/material";
-import { useUser, useAuth } from "@clerk/nextjs";
+import { useUser, useAuth, SignedOut, RedirectToSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
 import styles from "../../styles/Timer/TimerHome.module.css";
@@ -65,6 +65,7 @@ const TimerAndStopwatchPage: React.FC = () => {
         if (!response.ok) {
           throw new Error("Failed to fetch tasks");
         }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const data: Task[] = await response.json();
         setTasks(data);
       } catch (error) {
@@ -267,6 +268,11 @@ const TimerAndStopwatchPage: React.FC = () => {
   // ----------------------------------
   return (
     <div className={styles.pageContainer}>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
+
+
       {/* Animated background shapes */}
       {[...Array(5).keys()].map((i) => (
         <div

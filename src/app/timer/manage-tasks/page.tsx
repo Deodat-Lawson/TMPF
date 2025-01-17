@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useUser, useAuth } from "@clerk/nextjs";
+import { useUser, useAuth, SignedOut, RedirectToSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import {
   Container,
@@ -241,6 +241,11 @@ const ManageTasksPage: React.FC = () => {
   // -------------------------------------
   return (
     <div className={styles.pageContainer}>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
+
+
       {/* Rotating background */}
       {[...Array(5).keys()].map((i) => (
         <div

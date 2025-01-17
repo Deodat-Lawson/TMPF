@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Clock, BookOpen, School, Target, Calendar, Award } from 'lucide-react';
 import styles from '../../styles/Service.module.css';
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 
 interface ServiceCard {
   title: string;
@@ -62,22 +63,29 @@ const ServicesPage = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1>Our Services</h1>
-        <p>Explore our suite of tools designed to help you succeed in your academic journey</p>
+
+        <SignedOut>
+          <p>Please sign in to access our services</p>
+        </SignedOut>
+        <SignedIn>
+          <p>
+            Explore our suite of tools designed to help you succeed in your
+            academic journey
+          </p>
+        </SignedIn>
       </div>
 
       <div className={styles.servicesGrid}>
         {services.map((service, index) => (
           <Link
-            href={service.status === 'available' ? service.path : '#'}
+            href={service.status === "available" ? service.path : "#"}
             key={index}
-            className={`${styles.serviceCard} ${service.status === 'coming-soon' ? styles.comingSoon : ''}`}
+            className={`${styles.serviceCard} ${service.status === "coming-soon" ? styles.comingSoon : ""}`}
           >
-            <div className={styles.iconContainer}>
-              {service.icon}
-            </div>
+            <div className={styles.iconContainer}>{service.icon}</div>
             <h2>{service.title}</h2>
             <p>{service.description}</p>
-            {service.status === 'coming-soon' && (
+            {service.status === "coming-soon" && (
               <span className={styles.comingSoonBadge}>Coming Soon</span>
             )}
           </Link>
