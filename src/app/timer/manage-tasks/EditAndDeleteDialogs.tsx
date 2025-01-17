@@ -173,14 +173,17 @@ export const EditTaskDialog: React.FC<EditTaskDialogProps> = ({
           <InputLabel>Category</InputLabel>
           <Select
             value={editCategory}
-            onChange={(e) => setEditCategory(e.target.value as string)}
+            onChange={(e) => setEditCategory(e.target.value)}
             label="Category"
             style={{ backgroundColor: "transparent" }}
           >
-            <MenuItem value="General">General</MenuItem>
-            <MenuItem value="Work">Work</MenuItem>
-            <MenuItem value="Hobby">Hobby</MenuItem>
+            <MenuItem value="Default Category">Default Category</MenuItem>
+            <MenuItem value="Coding">Coding</MenuItem>
+            <MenuItem value="Reading">Reading</MenuItem>
             <MenuItem value="Exercise">Exercise</MenuItem>
+            <MenuItem value="Hobby">Hobby</MenuItem>
+            <MenuItem value="Work">Work</MenuItem>
+            <MenuItem value="Other">Other</MenuItem>
           </Select>
         </FormControl>
         <FormControl

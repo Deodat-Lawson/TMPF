@@ -42,7 +42,9 @@ interface ResponseData {
   totalTimeAll: number,
 }
 
-
+interface totalTime{
+  totalTimeAll: number
+}
 
 const StatisticsPage: React.FC = () => {
   const { user } = useUser();
@@ -61,10 +63,13 @@ const StatisticsPage: React.FC = () => {
 
 
   const colorMap: Record<string, string> = {
-    Work: "#4E9AF1",
-    Hobby: "#7DD3FC",
-    Exercise: "#A5B4FC",
-    Other: "#BFDBFE",
+    "Default Category": "#64748B", // Slate-ish
+    Coding: "#8B5CF6",            // Violet
+    Reading: "#FCA5A5",           // Light Red
+    Exercise: "#A5B4FC",          // Periwinkle
+    Hobby: "#7DD3FC",             // Light Blue
+    Work: "#4E9AF1",              // Blue
+    Other: "#BFDBFE",             // Very Light Blue
   };
 
   function getColorForCategory(cat: string) {
@@ -127,10 +132,18 @@ const StatisticsPage: React.FC = () => {
     }
 
     fetchCategoryData().catch((err) => {console.error(err)});
+    fetchLineChartData(startDate).catch((err) => {console.error(err)});
+  }, [range, rangeIndex]);
 
+
+
+
+
+  const fetchLineChartData = async (startDate : Date) => {
 
     // line chart intervals
-    const intervals = [-2, -1, 0, 1, 2].map((offset) => {
+    const offsets = [-2, -1, 0, 1, 2];
+    const intervals = offsets.map((offset) => {
       if (range === "DAY") {
         const d = addDays(startDate, offset);
         return formatDate(d);
@@ -139,7 +152,7 @@ const StatisticsPage: React.FC = () => {
         const sunday = addDays(monday, 6);
         return formatDate(monday) + " - " + formatDate(sunday);
       } else {
-        // MONTH
+        // range === "MONTH"
         const first = addMonths(startDate, offset);
         const end = new Date(first.getFullYear(), first.getMonth() + 1, 0);
         return (
@@ -152,27 +165,70 @@ const StatisticsPage: React.FC = () => {
         );
       }
     });
+
     setLineChartLabels(intervals);
 
-    // random data for line chart
-    const lineData = intervals.map(() => Math.floor(Math.random() * 500));
+    const lineDataPromises = offsets.map(async (offset) => {
+      let start: Date;
+      let end: Date;
+
+      if (range === "DAY") {
+        // For a single day, both start and end can be the same day
+        start = addDays(startDate, offset);
+        end = addDays(startDate, offset);
+      } else if (range === "WEEK") {
+        start = addWeeks(startDate, offset);      // Monday
+        end = addDays(start, 6);                 // Sunday
+      } else {
+        // MONTH
+        start = addMonths(startDate, offset);
+        end = new Date(start.getFullYear(), start.getMonth() + 1, 0);
+      }
+
+      const sStr = formatDate(start);
+      const eStr = formatDate(end);
+
+      const body = {
+        userId,
+        startDate: sStr,
+        endDate: eStr,
+      };
+
+      try {
+        const response = await fetch("/api/timer/fetchTotalTimeStamp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const data : totalTime = await response.json();
+        // console.log(data)
+
+        if (!data) {
+          throw new Error("returned data error", data);
+        }
+
+        const { totalTimeAll } = data;
+
+        return (totalTimeAll/60).toFixed(2);
+
+      } catch (err) {
+        console.error("Failed to line chart data:", err);
+        // Optionally handle error UI here
+        return 0;
+      }
+  });
+
+    const lineData = await Promise.all(lineDataPromises);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     setLineChartData(lineData);
-  }, [range, rangeIndex]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  };
 
 
 

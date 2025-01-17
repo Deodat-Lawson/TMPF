@@ -46,7 +46,7 @@ const TimerStopwatchHeader: React.FC<TimerStopwatchHeaderProps> = ({
               color: "rgba(255, 255, 255, 0.9)",
             }}
           >
-            Now viewing: <strong>{selectedTaskName}</strong>
+            Current Task: <strong>{selectedTaskName}</strong>
           </Typography>
         ) : (
           <Typography

@@ -132,7 +132,7 @@ const TimerStopwatchSettings: React.FC<TimerStopwatchSettingsProps> = ({
         <InputLabel>Category</InputLabel>
         <Select
           value={category}
-          onChange={(e) => setCategory(e.target.value as string)}
+          onChange={(e) => setCategory(e.target.value)}
           label="Category"
           style={{ backgroundColor: "transparent" }}
         >
@@ -140,6 +140,9 @@ const TimerStopwatchSettings: React.FC<TimerStopwatchSettingsProps> = ({
           <MenuItem value="Coding">Coding</MenuItem>
           <MenuItem value="Reading">Reading</MenuItem>
           <MenuItem value="Exercise">Exercise</MenuItem>
+          <MenuItem value="Hobby">Hobby</MenuItem>
+          <MenuItem value="Work">Work</MenuItem>
+          <MenuItem value="Other">Other</MenuItem>
         </Select>
       </FormControl>
     </div>

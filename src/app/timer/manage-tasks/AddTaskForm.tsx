@@ -112,14 +112,17 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({
         <InputLabel>Category</InputLabel>
         <Select
           value={newCategory}
-          onChange={(e) => setNewCategory(e.target.value as string)}
+          onChange={(e) => setNewCategory(e.target.value)}
           label="Category"
           style={{ backgroundColor: "transparent" }}
         >
-          <MenuItem value="General">General</MenuItem>
-          <MenuItem value="Work">Work</MenuItem>
-          <MenuItem value="Hobby">Hobby</MenuItem>
+          <MenuItem value="Default Category">Default Category</MenuItem>
+          <MenuItem value="Coding">Coding</MenuItem>
+          <MenuItem value="Reading">Reading</MenuItem>
           <MenuItem value="Exercise">Exercise</MenuItem>
+          <MenuItem value="Hobby">Hobby</MenuItem>
+          <MenuItem value="Work">Work</MenuItem>
+          <MenuItem value="Other">Other</MenuItem>
         </Select>
       </FormControl>
       <FormControl variant="outlined" sx={formControlStyle}>
