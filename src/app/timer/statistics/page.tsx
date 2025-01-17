@@ -60,6 +60,7 @@ const StatisticsPage: React.FC = () => {
     const eStr = formatDate(endDate);
     setRangeString(sStr + (sStr !== eStr ? " - " + eStr : ""));
 
+
     // generate random category data
     const sampleCategories = [
       { category: "Work", color: "#4E9AF1" },
@@ -106,6 +107,34 @@ const StatisticsPage: React.FC = () => {
     const lineData = intervals.map(() => Math.floor(Math.random() * 500));
     setLineChartData(lineData);
   }, [range, rangeIndex]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // -------------------------------------------
   //   Chart configs
@@ -205,6 +234,13 @@ const StatisticsPage: React.FC = () => {
 
   const handlePrev = () => setRangeIndex((prev) => prev - 1);
   const handleNext = () => setRangeIndex((prev) => prev + 1);
+
+
+
+
+
+
+
 
   // -------------------------------------------
   //   Render
