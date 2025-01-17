@@ -18,7 +18,7 @@ export interface Task {
   category: string;
   mode: "Timer" | "Stopwatch";
   priority: "High" | "Medium" | "Low";
-  studyTime?: number; // if mode === "Timer"
+  timeRemaining?: number; // if mode === "Timer"
 }
 
 interface TasksDrawerProps {

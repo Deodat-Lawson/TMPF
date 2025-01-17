@@ -27,16 +27,24 @@ const TimerAndStopwatchPage: React.FC = () => {
 
   const handleToggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
 
-  const handleTaskClick = (task: Task) => {
+  const handleTaskClick = async (task: Task) => {
     setSelectedTask(task);
 
     // If the task has custom durations/category, override the user's custom settings
-    if (task.studyTime) {
-      setWorkDuration(task.studyTime);
-      setTime(task.studyTime * 60); // reset time to the new workDuration
+    if (task.timeRemaining) {
+      setWorkDuration(task.timeRemaining);
+      setTime(task.timeRemaining * 60); // reset time to the new workDuration
     }
     if (task.category) {
       setCategory(task.category);
+    }
+    if (task.mode === "Stopwatch") {
+      setIsTimerMode(false);
+      await handleSwitchToStopwatch().then(r => console.log("Switched to stopwatch"));
+    }
+    if(task.mode === "Timer") {
+      setIsTimerMode(true);
+      await handleSwitchToTimer().then(r => console.log("Switched to timer"));
     }
 
     setIsDrawerOpen(false);
@@ -282,6 +290,7 @@ const TimerAndStopwatchPage: React.FC = () => {
           />
 
           {/* TIMER/STOPWATCH TOGGLE */}
+          {!selectedTask && (
           <div style={{ marginBottom: "2rem" }}>
             <Button
               variant={isTimerMode ? "contained" : "outlined"}
@@ -305,6 +314,7 @@ const TimerAndStopwatchPage: React.FC = () => {
               Stopwatch
             </Button>
           </div>
+          )}
 
           {/* TIMER/STOPWATCH DISPLAY */}
           <TimerStopwatchDisplay

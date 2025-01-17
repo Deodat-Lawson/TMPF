@@ -44,7 +44,18 @@ const TimerStopwatchDisplay: React.FC<TimerStopwatchDisplayProps> = ({
             color: "rgba(255, 255, 255, 0.9)",
           }}
         >
-          {isWorkSession ? "Work Session" : "Break Time"}
+          {"Timer Mode"}
+        </Typography>
+      )}
+      {!isTimerMode && (
+        <Typography
+          style={{
+            fontSize: "1.5rem",
+            marginBottom: "2rem",
+            color: "rgba(255, 255, 255, 0.9)",
+          }}
+        >
+          {"Stopwatch Mode"}
         </Typography>
       )}
     </>
