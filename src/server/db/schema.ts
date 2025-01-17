@@ -71,8 +71,9 @@ export const study_sessions  = createTable("study_sessions", {
 
   userId: varchar("user_id", { length: 256 }).notNull(),
   category: varchar("category", { length: 256 }).notNull(),
-  startTime: timestamp("start_time", { withTimezone: true }).notNull(),
-  endTime: timestamp("end_time", { withTimezone: true }).notNull(),
+  endTime: timestamp("end_time", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
   duration: integer("duration").notNull(),
 },);
 

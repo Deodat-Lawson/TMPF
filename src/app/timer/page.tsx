@@ -160,16 +160,28 @@ const TimerAndStopwatchPage: React.FC = () => {
   const handleSessionFinish = async () => {
     if (sessionStart) {
       const endTime = new Date();
-      console.log("Session finished!", {
-        userId: user?.id ?? "anonymous",
-        taskId: selectedTask?.id ?? null,
-        category,
-        startTime: sessionStart.toISOString(),
-        endTime: endTime.toISOString(),
-        durationSeconds: Math.round(
-          (endTime.getTime() - sessionStart.getTime()) / 1000
-        ),
-      });
+      console.log("Session start:", sessionStart);
+      console.log("Session end:", endTime);
+
+      try {
+        const response = await fetch("/api/timer/createTimeStamp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId,
+            category,
+            duration: Math.round(
+              (endTime.getTime() - sessionStart.getTime()) / 1000
+            ), }),
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch tasks");
+        }
+
+      } catch (error) {
+        console.error("Error fetching tasks", error);
+      }
+
       setSessionStart(null);
     }
   };
