@@ -8,6 +8,7 @@ import {
   pgTableCreator,
   timestamp,
   varchar,
+  date,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -63,3 +64,25 @@ export const tasks = createTable("tasks", {
   })
 
 );
+
+
+export const study_sessions  = createTable("study_sessions", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+
+  userId: varchar("user_id", { length: 256 }).notNull(),
+  category: varchar("category", { length: 256 }).notNull(),
+  startTime: timestamp("start_time", { withTimezone: true }).notNull(),
+  endTime: timestamp("end_time", { withTimezone: true }).notNull(),
+  duration: integer("duration").notNull(),
+},);
+
+
+
+export const study_time_daily = createTable("study_time_daily", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  userId: varchar("user_id", { length: 256 }).notNull(),
+  date: date("date").notNull(),
+
+  category: varchar("category", { length: 256 }).notNull(),
+  totalDuration: integer("total_duration").notNull(),
+});
