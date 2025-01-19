@@ -1,0 +1,119 @@
+
+/*
+   Keyframe for rotation.
+   We're naming it "rotate" to match usage below.
+*/
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/*
+   The container with a gradient background, full height,
+   and relative positioning for shapes.
+*/
+.backgroundWrapper {
+    @apply min-h-screen bg-gradient-to-r from-[#1a365d] to-[#2563eb] relative overflow-hidden;
+}
+
+/*
+   Common shape styling:
+   - absolute positioning
+   - big circular shape
+   - translucent white background
+*/
+.shape {
+    @apply absolute w-[60vw] h-[60vw] rounded-[43%] bg-white/5;
+}
+
+/*
+   Each shape is placed differently and spins at a different speed.
+   You can tweak the top/left or animation durations as needed.
+*/
+.shape1 {
+    top: -20%;
+    left: -10%;
+    animation: rotate 20s linear infinite;
+}
+.shape2 {
+    top: -10%;
+    left: -5%;
+    animation: rotate 25s linear infinite;
+}
+.shape3 {
+    top: 0%;
+    left: 0%;
+    animation: rotate 30s linear infinite;
+}
+.shape4 {
+    top: 10%;
+    left: 5%;
+    animation: rotate 35s linear infinite;
+}
+.shape5 {
+    top: 20%;
+    left: 10%;
+    animation: rotate 40s linear infinite;
+}
+
+/*
+   Main content area within the background,
+   to ensure shapes remain behind it.
+*/
+.contentWrapper {
+    @apply relative z-[1] py-10 px-5 pt-24;
+}
+
+/*
+   "Welcome" heading and description container
+*/
+.welcomeSection {
+    @apply max-w-[1200px] mx-auto mb-16 text-center text-white;
+}
+.welcomeTitle {
+    @apply text-4xl font-bold mb-4;
+}
+.welcomeDescription {
+    @apply text-lg opacity-90;
+}
+
+/*
+   Grid container for the feature buttons
+*/
+.featuresGrid {
+    @apply max-w-[1200px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-5;
+}
+
+/*
+   Styles for each feature card button
+*/
+.featureButton {
+    @apply bg-white/95 rounded-2xl p-8 border-none cursor-pointer text-left flex flex-col h-full shadow-md transition-all ease-in-out;
+}
+.featureButton:hover {
+    @apply -translate-y-1 shadow-lg;
+}
+
+/*
+   Icon container inside each feature
+*/
+.featureIcon {
+    @apply w-16 h-16 rounded-xl flex items-center justify-center mb-6;
+}
+
+/*
+   Feature Title, Description, and Explore Link
+*/
+.featureTitle {
+    @apply text-xl font-bold text-[#1a365d] mb-3;
+}
+.featureDescription {
+    @apply text-[#64748b] leading-relaxed mb-4 flex-1;
+}
+.exploreLink {
+    @apply flex items-center text-sm font-medium;
+}
