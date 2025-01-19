@@ -1,0 +1,122 @@
+
+.pageWrapper {
+    @apply min-h-screen bg-gradient-to-r from-[#1a365d] to-[#2563eb] p-10 flex justify-center pt-20;
+}
+
+/*
+   Chat Container
+   (replaces "max-w-[1000px] w-full bg-white/95 rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.1)]
+               overflow-hidden flex flex-col h-[calc(100vh_-_80px)]")
+*/
+.chatContainer {
+    @apply max-w-[1000px] w-full bg-white/95 rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col h-[calc(100vh_-_80px)];
+}
+
+/*
+   Header (replaces "p-6 border-b border-gray-200 bg-white")
+*/
+.header {
+    @apply p-6 border-b border-gray-200 bg-white;
+}
+
+.headerTitle {
+    @apply text-[1.8rem] text-[#1a365d] m-0 flex items-center gap-3;
+}
+
+/*
+   Chat Messages Section
+   (replaces "flex-1 overflow-y-auto p-6 flex flex-col gap-4")
+*/
+.chatMessages {
+    @apply flex-1 overflow-y-auto p-6 flex flex-col gap-4;
+}
+
+/*
+   Message (user vs. bot)
+   We'll define shared classes and conditionally apply them in your JSX
+*/
+
+/*
+   For user messages, we had "bg-[#2563eb] text-white",
+   for bot messages, "bg-white text-[#1a365d]".
+   We'll keep separate classes or do inline conditionals.
+*/
+.userMessage {
+    @apply bg-[#2563eb] text-white;
+}
+.botMessage {
+    @apply bg-white text-[#1a365d];
+}
+.messageBase {
+    @apply relative p-4 rounded-2xl shadow-sm;
+}
+
+/*
+   For the user/bot alignment:
+   user => "ml-auto"
+   bot => "mr-auto"
+*/
+.messageAlignmentUser {
+    @apply ml-auto;
+}
+.messageAlignmentBot {
+    @apply mr-auto;
+}
+
+/*
+   For the 'bubble container' around the messages
+   (like "flex gap-3 items-start max-w-[80%]")
+*/
+.messageWrapper {
+    @apply flex gap-3 items-start max-w-[80%];
+}
+
+/*
+   Icon circle background
+   (like "bg-[#2563eb] rounded-full p-2")
+*/
+.blueCircle {
+    @apply bg-[#2563eb] rounded-full p-2;
+}
+
+/*
+   Thumbs Container
+   (replaces "mt-3 flex gap-3 border-t border-gray-200 pt-3")
+*/
+.feedbackContainer {
+    @apply mt-3 flex gap-3 border-t border-gray-200 pt-3;
+}
+
+/*
+   Thumbs button
+   (replaces "p-1 text-gray-500 hover:text-gray-700 transition-colors")
+*/
+.feedbackButton {
+    @apply p-1 text-gray-500 hover:text-gray-700 transition-colors;
+}
+
+/*
+   Typing indicator
+   (like "animate-spin" from tailwind, or custom if you need it)
+*/
+.spinner {
+    @apply animate-spin;
+}
+
+/*
+   Input area
+   (replaces "p-6 border-t border-gray-200 bg-white")
+*/
+.inputArea {
+    @apply p-6 border-t border-gray-200 bg-white;
+}
+
+.inputWrapper {
+    @apply flex gap-3;
+}
+.textInput {
+    @apply flex-1 p-3 rounded-md border border-gray-200 text-base;
+}
+.sendButton {
+    @apply bg-[#2563eb] text-white border-none rounded-md px-4 flex items-center justify-center;
+}

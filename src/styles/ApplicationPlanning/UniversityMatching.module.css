@@ -1,0 +1,194 @@
+
+/*
+  Background wrapper:
+  replaces inline: minHeight=100vh, background=linear-gradient..., padding=40px 20px
+*/
+.pageBackground {
+    @apply min-h-screen bg-gradient-to-r from-[#1a365d] to-[#2563eb] py-10 px-5;
+}
+
+/*
+  Main container:
+  replaces inline: maxWidth=1200px, margin=0 auto
+*/
+.container {
+    @apply max-w-[1200px] mx-auto pt-24;
+}
+
+/*
+  Header and search area
+*/
+.headerSection {
+    @apply mb-10 text-center text-white;
+}
+.headerTitle {
+    @apply text-[2.5rem] mb-4 font-bold;
+}
+.headerDesc {
+    @apply text-lg opacity-90 mb-6;
+}
+
+/*
+  Search input wrapper:
+  replaces inline: maxWidth=600px, margin=0 auto, position=relative
+*/
+.searchWrapper {
+    @apply max-w-[600px] mx-auto relative;
+}
+
+/*
+  Search input:
+  replaces inline: width=100%, padding=16px 24px, etc.
+*/
+.searchInput {
+    @apply w-full py-4 px-6 pl-12 rounded-lg border-none text-base shadow-md text-black;
+    /* If you need a custom placeholder color, see note below */
+}
+
+/*
+  Icon in the search bar:
+  replaces inline: position=absolute, left=16px, transform=translateY(-50%), etc.
+*/
+.searchIcon {
+    @apply absolute left-4 top-1/2 -translate-y-1/2 text-gray-400;
+}
+
+/*
+  University grid:
+  replaces inline: display=grid, gap=24px
+*/
+.universityGrid {
+    @apply grid gap-6;
+}
+
+/*
+  Card container:
+  replaces inline: background=white, borderRadius=20px, overflow=hidden, boxShadow, etc.
+*/
+.card {
+    @apply bg-white rounded-[20px] overflow-hidden shadow-md transition-transform cursor-pointer;
+}
+
+/*
+  Card image:
+  replaces inline: width=100%, height=200px, objectFit=cover
+*/
+.cardImage {
+    @apply w-full h-[200px] object-cover;
+}
+
+/*
+  Card body/padding area
+*/
+.cardBody {
+    @apply p-6;
+}
+
+/*
+  Card header (title + location + match)
+  replaces inline: flex justify-between items-start mb-4
+*/
+.cardHeader {
+    @apply flex justify-between items-start mb-4;
+}
+
+/*
+  Card name/title
+  replaces inline: margin=0 0 8px 0, color=#1a365d, fontSize=1.5rem
+*/
+.cardName {
+    @apply m-0 mb-2 text-[#1a365d] text-[1.5rem] font-bold;
+}
+
+/*
+  Location row
+  replaces inline: display=flex, alignItems=center, gap=8px, color=#64748b
+*/
+.locationRow {
+    @apply flex items-center gap-2 text-gray-500 text-sm;
+}
+
+/*
+  Match badge
+  We'll keep dynamic background color inline in TS,
+  but define general shape/padding here
+*/
+.matchBadge {
+    @apply text-white py-2 px-4 font-bold rounded-full;
+}
+
+/*
+  Fade in animation for expanded details
+*/
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(3px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.fadeIn {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/*
+  Reason Container
+  replaces inline: background=#f8fafc, padding=16px, etc.
+*/
+.reasonContainer {
+    @apply bg-[#f8fafc] p-4 rounded-lg mb-5;
+}
+
+/*
+  Reason Title
+*/
+.reasonTitle {
+    @apply text-[#1a365d] text-base mb-2 flex items-center gap-2;
+}
+.reasonDesc {
+    @apply text-gray-500 m-0 leading-6;
+}
+
+/*
+  Quick facts grid
+*/
+.quickFacts {
+    @apply grid grid-cols-2 gap-4 mb-5;
+}
+.factsHeader {
+    @apply text-[#1a365d] text-base mb-2;
+}
+.factsRow {
+    @apply flex items-center gap-2 text-gray-500;
+}
+
+/*
+  Top Programs list
+*/
+.topProgramsList {
+    @apply m-0 p-0 list-none;
+}
+
+/*
+  Strengths wrapper (chips)
+*/
+.strengthsWrapper {
+    @apply flex gap-2 flex-wrap;
+}
+.strengthChip {
+    @apply bg-[#f0f7ff] text-[#2563eb] py-1 px-3 rounded-full text-sm;
+}
+
+/*
+  Collapsed details prompt
+*/
+.collapsedPrompt {
+    @apply text-gray-500 flex items-center gap-1 text-sm;
+}
+
+.searchInput::placeholder {
+    color: #64748b;
+}

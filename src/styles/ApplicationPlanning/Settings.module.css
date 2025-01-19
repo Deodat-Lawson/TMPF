@@ -1,0 +1,147 @@
+
+/*
+   Page wrapper (linear gradient bg, padding)
+   Replaces inline: minHeight=100vh, background=..., padding=40px 20px
+*/
+.pageWrapper {
+    @apply min-h-screen bg-gradient-to-r from-[#1a365d] to-[#2563eb] py-10 px-5;
+}
+
+/*
+   Main container
+   Replaces inline: maxWidth=800px, margin=0 auto, background=white, borderRadius=24px,
+   padding=40px, boxShadow=..., display=flex/flex-col
+*/
+.container {
+    @apply max-w-[800px] mx-auto bg-white rounded-[24px] p-10 shadow-[0_8px_32px_rgba(0,0,0,0.1)] pt-12;
+}
+
+/*
+   Form
+   We can keep as is or just let it be
+*/
+.form {
+    /* No special classes,
+       or use grid styling etc. if needed. */
+}
+
+/*
+   Section spacing (margin-bottom: 40px)
+*/
+.section {
+    @apply mb-10;
+}
+
+/*
+   Section header
+   Replaces inline: display=flex, alignItems=center, gap=12px, marginBottom=24px
+*/
+.sectionHeader {
+    @apply flex items-center gap-3 mb-6;
+}
+
+/*
+   Section header icon container
+   Replaces inline: background=#2563eb, color=white, padding=10px, borderRadius=12px
+*/
+.iconWrapper {
+    @apply bg-[#2563eb] text-white p-2.5 rounded-xl;
+}
+
+/*
+   Section Title
+   Replaces inline: margin=0, color=#1a365d, fontSize=1.8rem
+*/
+.sectionTitle {
+    @apply m-0 text-[#1a365d] text-[1.8rem] font-semibold;
+}
+
+/*
+   We can define a .twoColumnGrid for 2-col inputs
+*/
+.twoColumnGrid {
+    @apply grid grid-cols-2 gap-5;
+}
+
+/*
+   Input base styling
+   Replaces inline input style: width=100%, padding=12px, borderRadius=8px, etc.
+*/
+.inputBase {
+    @apply w-full p-3 rounded-md border border-gray-200 text-base;
+}
+
+/*
+   Textarea base styling
+   Similar to input
+*/
+.textareaBase {
+    @apply w-full p-3 rounded-md border border-gray-200 text-base;
+}
+
+/*
+   A small top margin for e.g. "marginTop=20px"
+*/
+.mt20 {
+    @apply mt-5;
+}
+
+/*
+   Activities container
+   Replaces inline: background=#f8fafc, padding=20px, borderRadius=12px, marginBottom=20px
+*/
+.activityCard {
+    @apply bg-[#f8fafc] p-5 rounded-xl mb-5;
+}
+
+/*
+   Activities card header
+   display=flex, justifyContent=space-between, alignItems=center, marginBottom=16px
+*/
+.activityHeader {
+    @apply flex justify-between items-center mb-4;
+}
+
+/*
+   Activity title
+   margin=0, color=#1a365d, fontSize=1.2rem
+*/
+.activityTitle {
+    @apply m-0 text-[#1a365d] text-[1.2rem] font-medium;
+}
+
+/*
+   Remove activity button
+   background=none, border=none, color=#ef4444, cursor=pointer, padding=4px
+*/
+.removeButton {
+    @apply bg-transparent border-none text-red-500 cursor-pointer p-1;
+}
+
+/*
+   Add Another Activity button
+   Replaces inline
+*/
+.addActivityButton {
+    @apply flex items-center gap-2 bg-[#2563eb] text-white border-none px-6 py-3 rounded-md cursor-pointer text-base;
+}
+
+/*
+   Preferences checkboxes + label
+   We can define utility classes or keep them inline for small bits
+*/
+
+/*
+   Save Button
+   Replaces inline styling:
+   display=flex, alignItems=center, justifyContent=center, gap=8px,
+   width=100%, padding=16px, background=#2563eb, color=white, border=none,
+   borderRadius=8px, fontSize=1.1rem, fontWeight=500, cursor=pointer, transition=all 0.3s
+   We'll use Tailwind's hover: for mouseOver effect
+*/
+.saveButton {
+    @apply flex items-center justify-center gap-2 w-full py-4 bg-[#2563eb] text-white border-none rounded-md text-[1.1rem] font-medium cursor-pointer transition-all;
+}
+.saveButton:hover {
+    @apply bg-[#1d4ed8];
+}

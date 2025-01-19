@@ -22,14 +22,14 @@ const HomePage = () => {
       description:
         "Get instant answers to your university application questions from our AI assistant.",
       icon: <Brain size={32} />,
-      path: "/ai-qa",
+      path: "/application-planning/ai-chat",
       color: "#2563eb",
     },
     {
       title: "Skill Assessment",
       description: "Discover your academic strengths and areas for improvement.",
       icon: <Target size={32} />,
-      path: "/skills",
+      path: "/application-planning/skill-assessment",
       color: "#7c3aed",
     },
     {
@@ -37,14 +37,14 @@ const HomePage = () => {
       description:
         "Find universities that match your profile and calculate your admission chances.",
       icon: <School size={32} />,
-      path: "/university-matching",
+      path: "/application-planning/university-matching",
       color: "#0891b2",
     },
     {
       title: "Profile Settings",
       description: "Update your personal information and preferences.",
       icon: <UserCog size={32} />,
-      path: "/profile",
+      path: "/application-planning/settings",
       color: "#059669",
     },
   ];

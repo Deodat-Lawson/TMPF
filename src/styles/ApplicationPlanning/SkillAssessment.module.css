@@ -1,0 +1,168 @@
+
+/*
+   Background wrapper (gradient, spacing)
+   Replaces inline: { minHeight: '100vh', background, padding: '40px 20px' }
+*/
+.backgroundWrapper {
+    @apply min-h-screen bg-gradient-to-r from-[#1a365d] to-[#2563eb] py-10 px-5;
+}
+
+/*
+   Container (max-width, center)
+   Replaces inline: { maxWidth: '1200px', margin: '0 auto' }
+*/
+.container {
+    @apply max-w-[1200px] mx-auto pt-24;
+}
+
+/*
+   Header styles
+   Replaces inline: { textAlign: 'center', marginBottom: '40px', color: 'white' }
+*/
+.header {
+    @apply text-center mb-10 text-white;
+}
+.headerTitle {
+    @apply text-4xl mb-4 font-bold;
+}
+.headerDesc {
+    @apply text-lg opacity-90;
+}
+
+/*
+   Skills Grid
+   Replaces inline:
+   {
+     display: 'grid',
+     gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+     gap: '24px'
+   }
+   We'll use an "arbitrary value" to replicate that minmax layout.
+*/
+.skillsGrid {
+    @apply grid gap-6;
+    /* Tailwind can handle arbitrary values for columns: */
+    @apply grid-cols-[repeat(auto-fit,_minmax(350px,_1fr))];
+}
+
+/*
+   Skill card (white background, rounded, box shadow, etc.)
+   Replaces inline:
+   {
+     background: 'white',
+     borderRadius: '16px',
+     padding: '24px',
+     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+     display: 'flex',
+     flexDirection: 'column',
+     gap: '16px'
+   }
+*/
+.skillCard {
+    @apply bg-white rounded-xl p-6 shadow-md flex flex-col gap-4;
+}
+
+/*
+   Card header (icon + title row)
+   Replaces inline: { display: 'flex', alignItems: 'center', gap: '12px' }
+*/
+.cardHeader {
+    @apply flex items-center gap-3;
+}
+
+/*
+   Icon container
+   Replaces inline: { background: '#f0f7ff', padding: '12px', borderRadius: '12px', color: '#2563eb' }
+*/
+.iconContainer {
+    @apply bg-[#f0f7ff] text-[#2563eb] p-3 rounded-xl;
+}
+
+/*
+   Skill title
+   Replaces inline: { margin: 0, fontSize: '1.2rem', color: '#1a365d' }
+*/
+.skillTitle {
+    @apply text-[1.2rem] text-[#1a365d] m-0;
+}
+
+/*
+   Progress bar container
+   Replaces inline: { background: '#f1f5f9', height: '8px', borderRadius: '4px', overflow: 'hidden' }
+*/
+.progressBarContainer {
+    @apply bg-[#f1f5f9] h-2 rounded-md overflow-hidden;
+}
+
+/*
+   We'll keep the "fill" width and color logic inline in TS
+   because it's dynamic (depends on skill.score).
+*/
+
+/*
+   Score / Description container
+   Score label + value row
+*/
+.scoreRow {
+    @apply flex justify-between items-center mb-2;
+}
+.scoreLabel {
+    @apply text-gray-500 text-sm;
+}
+.scoreValue {
+    @apply font-bold text-[#1a365d];
+}
+.scoreDescription {
+    @apply m-0 text-gray-500 text-sm;
+}
+
+/*
+   Container for Strengths + Improvements
+   Replaces inline: { display: 'grid', gap: '12px' }
+*/
+.siGrid {
+    @apply grid gap-3;
+}
+
+/*
+   Subheadings (Strengths, etc.)
+   Replaces inline:
+   { color: '#22c55e', margin: '0 0 8px 0', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '4px' }
+   We'll define two separate classes for color: .strengthTitle and .improveTitle
+*/
+.strengthTitle {
+    @apply text-[#22c55e] m-0 mb-2 text-sm flex items-center gap-1 font-semibold;
+}
+.improveTitle {
+    @apply text-[#f59e0b] m-0 mb-2 text-sm flex items-center gap-1 font-semibold;
+}
+
+/*
+   List styling
+   Replaces inline: { margin: 0, paddingLeft: '20px', fontSize: '0.9rem', color: '#64748b' }
+*/
+.ulList {
+    @apply list-disc ml-5 text-sm text-gray-500 m-0;
+}
+
+/*
+   Overall Summary
+   Replaces inline:
+   {
+     background: 'rgba(255, 255, 255, 0.1)',
+     borderRadius: '16px',
+     padding: '24px',
+     marginTop: '40px',
+     color: 'white',
+     backdropFilter: 'blur(10px)'
+   }
+*/
+.overallSummary {
+    @apply bg-white/10 rounded-xl p-6 mt-10 text-white backdrop-blur-md;
+}
+.overallSummaryTitle {
+    @apply flex items-center gap-2 mb-4 text-xl font-semibold;
+}
+.overallSummaryText {
+    @apply m-0 leading-loose;
+}
