@@ -1,0 +1,81 @@
+/* UniversityApplicationForm.module.css */
+
+/* Container for the entire form page */
+.container {
+    @apply min-h-screen bg-gradient-to-r from-[#1a365d] to-[#2563eb] py-10 px-5 pt-24;
+}
+
+/* Progress Bar Container */
+.progressBarContainer {
+    @apply max-w-[800px] mx-auto mb-10 p-5 bg-white/10 rounded-xl backdrop-blur-sm;
+}
+
+/* Progress Bar Header */
+.progressBarHeader {
+    @apply flex justify-between items-center mb-3 text-white;
+}
+
+/* Progress Bar Track */
+.progressBarTrack {
+    @apply h-2 bg-white/10 rounded overflow-hidden;
+}
+
+/* Progress Bar Fill */
+.progressBarFill {
+    @apply h-full bg-white transition-all duration-300;
+}
+
+/* Main Form Container */
+.formContainer {
+    @apply max-w-[800px] mx-auto bg-white rounded-2xl p-10 shadow-md;
+}
+
+/* Title Section (icon + heading) */
+.sectionTitle {
+    @apply flex items-center gap-3 mb-6;
+}
+.sectionTitleH2 {
+    @apply text-[#1a365d] m-0 text-2xl;
+}
+
+/* Two Column Grid */
+.twoColumnGrid {
+    @apply grid grid-cols-2 gap-5 mb-6;
+}
+
+/* Input Field Container */
+.inputField {
+    @apply mb-5;
+}
+.inputFieldLabel {
+    @apply block mb-2 text-[#1a365d] font-medium;
+}
+.inputFieldInput {
+    @apply w-full p-3 rounded-lg border border-gray-200 text-base transition-colors duration-300;
+}
+
+/* Navigation Buttons */
+.navigationButtons {
+    @apply flex justify-between mt-10;
+}
+.prevButton {
+    @apply flex items-center gap-2 px-6 py-3 rounded-lg border border-gray-200 bg-white text-blue-600 cursor-pointer;
+}
+.nextButton {
+    @apply flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-600 text-white cursor-pointer ml-auto;
+}
+
+/* Fade-in animation for each step */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.fadeIn {
+    animation: fadeIn 0.5s ease-out;
+}

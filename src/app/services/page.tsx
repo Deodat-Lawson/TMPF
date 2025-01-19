@@ -26,8 +26,8 @@ const ServicesPage = () => {
       title: "University Application Planning",
       description: "Get personalized university recommendations based on your academic profile and preferences.",
       icon: <School size={32} />,
-      path: "/universityApp/form",
-      status: "coming-soon"
+      path: "/application-planning",
+      status: "available"
     },
     {
       title: "Study Resources",
